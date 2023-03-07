@@ -8,7 +8,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.util.encoders.Hex;
 
 public class Crypto {
-	private static String defaultKey = "";
+	private static String defaultKey = "aafd12f438cae52538b479e2089ddec2f06cb58faafd12f6";
     public static String performEncrypt(String keyText, String plainText) {
         try{
             byte[] key = Hex.decode(keyText.getBytes());
