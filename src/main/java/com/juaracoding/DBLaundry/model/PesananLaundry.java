@@ -43,8 +43,8 @@ public class PesananLaundry {
     private Status idStatus;
 
     /*
-    * Start Audit Trails
-    * */
+     * Start Audit Trails
+     * */
     @Column(name = "CreatedDate")
     private Date createdDate = new Date();
 
@@ -61,8 +61,8 @@ public class PesananLaundry {
     private byte isDelete = 0;
 
     /*
-    * End Audit Trails
-    * */
+     * End Audit Trails
+     * */
     public Long getIdPesanan() {
         return idPesanan;
     }

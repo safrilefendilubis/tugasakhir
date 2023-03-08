@@ -1,13 +1,12 @@
 package com.juaracoding.DBLaundry.model;/*
-Created By IntelliJ IDEA 2022.3.2 (Ultimate Edition)
+IntelliJ IDEA 2022.3.2 (Ultimate Edition)
 Build #IU-223.8617.56, built on January 26, 2023
-@Author Syarifudin a.k.a. Muhamad Syarifuidn
+@Author User a.k.a. Safril Efendi Lubis
 Java Developer
-Created on 03/03/2023 16:02
-@Last Modified 03/03/2023 16:02
+Created on 3/3/2023 4:54 PM
+@Last Modified 3/3/2023 4:54 PM
 Version 1.1
 */
-
 import javax.persistence.*;
 
 @Entity

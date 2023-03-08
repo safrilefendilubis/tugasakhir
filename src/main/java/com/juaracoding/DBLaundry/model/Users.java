@@ -28,8 +28,8 @@ public class Users {
     @NotNull (message = ConstantMessage.WARNING_NAMA_NULL)
     @NotBlank(message = ConstantMessage.WARNING_NAMA_BLANK)
     @Length(message = ConstantMessage.WARNING_MAXSIMAL_NAMA,max = 40)
-    @Column(name = "Name",nullable = false, unique = true, length = 40)
-    private String name;
+    @Column(name = "NamaLengkap",nullable = false, unique = true, length = 40)
+    private String namaLengkap;
 
     @NotEmpty(message = ConstantMessage.WARNING_EMAIL_EMPTY)
     @NotNull(message = ConstantMessage.WARNING_EMAIL_NULL)
@@ -59,6 +59,10 @@ public class Users {
 
     @Column(name = "Role")
     private String role;
+
+    @NotEmpty(message = ConstantMessage.ERROR_NOHP_IS_EMPTY)
+    @NotNull(message = ConstantMessage.ERROR_NOHP_IS_NULL)
+    private String noHP;
     /*
   start audit trails
    */
@@ -129,12 +133,12 @@ public class Users {
         this.idUser = idUser;
     }
 
-    public String getName() {
-        return name;
+    public String getNamaLengkap() {
+        return namaLengkap;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNamaLengkap(String name) {
+        this.namaLengkap = name;
     }
 
     public String getEmail() {
@@ -180,4 +184,12 @@ public class Users {
     public String getRole() {return role;}
 
     public void setRole(String role) {this.role = role;}
+
+    public String getNoHP() {
+        return noHP;
+    }
+
+    public void setNoHP(String noHP) {
+        this.noHP = noHP;
+    }
 }

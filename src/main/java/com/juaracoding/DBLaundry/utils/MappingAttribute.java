@@ -8,6 +8,8 @@ Created on 2/28/2023 8:16 PM
 Version 1.1
 */
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import java.util.Date;
 import java.util.Map;
@@ -26,5 +28,11 @@ public class MappingAttribute {
             model.addAttribute("errorCode",mapz.get("errorCode"));
             model.addAttribute("path",mapz.get("path"));
         }
+    }
+
+    public BindingResult setErrorMessage(BindingResult br, String  strErrorMessage)
+    {
+        br.addError(new ObjectError("globalError",strErrorMessage));
+        return br;
     }
 }

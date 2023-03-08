@@ -28,8 +28,8 @@ public class Pengeluaran {
     private String biaya;
 
     /*
-    * Start Audit Trails
-    * */
+     * Start Audit Trails
+     * */
     @Column(name = "CreatedDate")
     private Date createdDate = new Date();
 
@@ -42,8 +42,8 @@ public class Pengeluaran {
     @Column(name = "IsDelete")
     private byte isDelete = 0;
     /*
-    * End Audit Trails
-    * */
+     * End Audit Trails
+     * */
 
     public Long getIdPengeluaran() {
         return idPengeluaran;
