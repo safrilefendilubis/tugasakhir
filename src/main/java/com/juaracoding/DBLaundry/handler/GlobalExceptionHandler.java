@@ -1,6 +1,8 @@
 package com.juaracoding.DBLaundry.handler;
 
-import com.juaracoding.DBLaundry.utils.ConstantMessageH;
+import com.juaracoding.DBLaundry.configuration.OtherConfig;
+import com.juaracoding.DBLaundry.utils.ConstantMessage;
+import com.juaracoding.DBLaundry.utils.LoggingFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +26,11 @@ import java.util.List;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private List<ApiValidationError> lsSubError = new ArrayList<ApiValidationError>();
+	private String[] strException = new String[2];
+
+	public GlobalExceptionHandler() {
+		strException[0] = "GlobalExceptionHandler";
+	}
 
 	@Override
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -37,20 +44,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 
 		ApiError apiError =
-				new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, ConstantMessageH.ERROR_UNPROCCESSABLE,ex,request.getDescription(false),"00001");
+				new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, ConstantMessage.ERROR_UNPROCCESSABLE,ex,request.getDescription(false),"00001");
 		apiError.setSubErrors(lsSubError);
 		return ResponseEntity.unprocessableEntity().body(apiError);
 	}
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, ConstantMessageH.ERROR_MAIL_FORM_JSON, ex,request.getDescription(false),"00002"));
+		strException[1]= "handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) -- LINE 54";
+		LoggingFile.exceptionStringz(strException,ex, OtherConfig.getFlagLogging());
+		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, ConstantMessage.ERROR_MAIL_FORM_JSON, ex,request.getDescription(false),"00002"));
 	}
 
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-		System.out.println("RESOURCE NOT FOUND EXCEPTION");
+		strException[1]= "resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) -- LINE 59";
+		LoggingFile.exceptionStringz(strException,ex, OtherConfig.getFlagLogging());
 		return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND,ex.getMessage(),ex,request.getDescription(false),"00003"));
 	}
 
@@ -59,15 +69,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<Object> handleAllUncaughtException(Exception ex, WebRequest request) {
 
-		System.out.println("INTERNAL SERVER ERROR => "+ex.getMessage());
-		return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ConstantMessageH.ERROR_INTERNAL_SERVER,ex,request.getDescription(false),"X2013"));
+		strException[1]= "handleAllUncaughtException(Exception ex, WebRequest request) -- LINE 70";
+		LoggingFile.exceptionStringz(strException,ex, OtherConfig.getFlagLogging());
+		return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,ConstantMessage.ERROR_INTERNAL_SERVER,ex,request.getDescription(false),"X2013"));
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<Object> dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
 
-		System.out.println("DATA INTEGRITY ERROR => "+ex.getMessage());
-		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, ConstantMessageH.ERROR_DATA_INVALID,ex,request.getDescription(false),"X7006"));
+
+		strException[1]= "dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) -- LINE 79";
+		LoggingFile.exceptionStringz(strException,ex, OtherConfig.getFlagLogging());
+		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST,ConstantMessage.ERROR_DATA_INVALID,ex,request.getDescription(false),"X7006"));
 	}
 
 	private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
@@ -76,9 +89,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-		return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ConstantMessageH.ERROR_UNEXPECTED,ex,request.getDescription(false),"X2236"));
+		strException[1]= "handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) -- LINE 89";
+		LoggingFile.exceptionStringz(strException,ex, OtherConfig.getFlagLogging());
+		return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,ConstantMessage.ERROR_UNEXPECTED,ex,request.getDescription(false),"X2236"));
 	}
 }
-/*
-a
- */

@@ -1,12 +1,5 @@
-package com.juaracoding.DBLaundry.core;/*
-IntelliJ IDEA 2022.3.2 (Ultimate Edition)
-Build #IU-223.8617.56, built on January 26, 2023
-@Author User a.k.a. Safril Efendi Lubis
-Java Developer
-Created on 2/24/2023 9:47 PM
-@Last Modified 2/24/2023 9:47 PM
-Version 1.1
-*/
+package com.juaracoding.DBLaundry.core;
+
 import java.util.function.Function;
 
 public class BcryptImpl {
@@ -21,18 +14,20 @@ public class BcryptImpl {
         return bcrypt.verifyAndUpdateHash(password, hash, updateFunc);
     }
 
-    public static boolean verifyHash(String password, String hash) {
-        return bcrypt.verifyHash(password, hash);
+    public static boolean verifyHash(String password , String hash)
+    {
+        return bcrypt.verifyHash(password,hash);
     }
-
+    
     public static void main(String[] args) {
 //        String[] mutableHash = new String[1];
 //        Function<String, Boolean> update = hash -> { mutableHash[0] = hash; return true; };
 
         String strUserName = "Paulo";
         String strPwd = "Paul123";
-        String strAfterEncrypt1 = hash(strUserName + strPwd);
-        String strAfterEncrypt2 = hash(strPwd);
+        String strAfterEncrypt1 = hash(strUserName+strPwd);
+        String strAfterEncrypt2 = hash("225789");
+        System.out.println(strAfterEncrypt2);
 //        System.out.println("After Encrypt-1 : "+strAfterEncrypt1);
 //        System.out.println("After Encrypt-2 : "+strAfterEncrypt2);
 
@@ -44,7 +39,8 @@ public class BcryptImpl {
 //        $2a$11$52hfsJP7mTntGlSEitXq3O.yvvZCrOSC6rsHEXDgqH0yH6er8LClW --> Encrypt 2-2
 //        $2a$11$60JK7Mb2uZ4lgQjveXhNp.g6obq9wpobbiY93A/bw/lcseKhsu7oi --> Encrypt 2-3
 
-        System.out.println(verifyHash(strUserName + strPwd, "$2a$11$jT60LlDg4AH2IPpIT6uh8uNCnJQ5CSN6mtI2cbcLNnsQG9DIn/4GC"));
+//        System.out.println(verifyHash(strUserName+strPwd,"$2a$11$jT60LlDg4AH2IPpIT6uh8uNCnJQ5CSN6mtI2cbcLNnsQG9DIn/4GC"));
+        System.out.println(hash("addMenu"));
 
 //        strPwd = strUserName+strPwd;
 //        String strAfterEncrypt = hash(strPwd);

@@ -1,12 +1,5 @@
-package com.juaracoding.DBLaundry.core;/*
-IntelliJ IDEA 2022.3.2 (Ultimate Edition)
-Build #IU-223.8617.56, built on January 26, 2023
-@Author User a.k.a. Safril Efendi Lubis
-Java Developer
-Created on 2/24/2023 9:53 PM
-@Last Modified 2/24/2023 9:53 PM
-Version 1.1
-*/
+package com.juaracoding.DBLaundry.core;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.function.Function;

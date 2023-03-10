@@ -8,8 +8,6 @@ Created on 3/1/2023 10:56 PM
 Version 1.1
 */
 import javax.persistence.*;
-import java.awt.*;
-import java.util.List;
 
 @Entity
 @Table(name= "MstStatus")

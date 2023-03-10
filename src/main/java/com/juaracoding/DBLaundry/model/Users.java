@@ -12,7 +12,9 @@ import com.juaracoding.DBLaundry.utils.ConstantMessage;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -24,16 +26,16 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
 
-    @NotEmpty(message = ConstantMessage.WARNING_NAMA_EMPTY)
-    @NotNull (message = ConstantMessage.WARNING_NAMA_NULL)
-    @NotBlank(message = ConstantMessage.WARNING_NAMA_BLANK)
-    @Length(message = ConstantMessage.WARNING_MAXSIMAL_NAMA,max = 40)
+    @NotEmpty(message = ConstantMessage.WARNING_NAMA_USER_EMPTY)
+    @NotNull (message = ConstantMessage.WARNING_NAMA_USER_NULL)
+    @NotBlank(message = ConstantMessage.WARNING_NAMA_USER_BLANK)
+    @Length(message = ConstantMessage.WARNING_MAXSIMAL_NAMA_USER,max = 40)
     @Column(name = "NamaLengkap",nullable = false, unique = true, length = 40)
     private String namaLengkap;
 
-    @NotEmpty(message = ConstantMessage.WARNING_EMAIL_EMPTY)
-    @NotNull(message = ConstantMessage.WARNING_EMAIL_NULL)
-    @NotBlank(message = ConstantMessage.WARNING_EMAIL_BLANK)
+    @NotEmpty(message = ConstantMessage.WARNING_EMAIL_USER_EMPTY)
+    @NotNull(message = ConstantMessage.WARNING_EMAIL_USER_NULL)
+    @NotBlank(message = ConstantMessage.WARNING_EMAIL_USER_BLANK)
     @Column(name = "Email",unique = true, nullable = false)
     private String email;
 
