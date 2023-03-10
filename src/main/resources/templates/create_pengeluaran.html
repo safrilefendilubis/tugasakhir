@@ -1,0 +1,61 @@
+<form th:action="@{/api/v1/pengeluaran}" th:object = "${pengeluaran}" method="POST" id="buatPengeluaran">
+  <div class ="form-group">
+    <label> Nama pengeluaran </label>
+    <input
+            type = "text"
+            name = "namaPengeluaran"
+            th:field = "*{namaPengeluaran}"
+            class = "form-control"
+            placeholder="Masukan nama pengeluaran"
+    />
+  </div>
+
+  <div class ="form-group">
+    <label> Jumlah biaya </label>
+    <input
+            type = "text"
+            name = "biaya"
+            th:field = "*{biaya}"
+            class = "form-control"
+            placeholder="Masukan biaya pengeluaran"
+    />
+  </div>
+
+  <div class = "modal-footer">
+    <button type="submit" class = "btn btn-primary">
+      Submit
+    </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  </div>
+</form>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+
+  $("#buatPengeluaran").submit(function(event) {
+    event.preventDefault(); //prevent default action
+    let post_url = $(this).attr("action"); //get form action url
+    let request_method = $(this).attr("method"); //get form GET/POST method
+    let form_data = $(this).serialize(); //Encode form elements for submission
+    $.ajax({
+      url: post_url,
+      type: request_method,
+      data: form_data
+    }).done(function(response) { //
+      let pattern = /e97e7c60095d4cd505cce7a56c376dba/i;
+      let result = response.match(pattern);
+      if(result)
+      {
+        $("#server-results").html(response);
+      }
+      else
+      {
+        $('#pengeluaranAdd').modal('hide');
+        confirm("DATA BERHASIL DISIMPAN");
+      }
+
+    });
+  });
+
+  /*]]>*/
+</script>

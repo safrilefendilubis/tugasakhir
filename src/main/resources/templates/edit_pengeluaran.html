@@ -1,0 +1,62 @@
+<form  th:action="@{/api/v1/pengeluaran/{id} (id=${pengeluaran.idPengeluaran})}" th:object="pengeluaran" method="POST">
+  <div class ="form-group">
+    <label> Nama Pengeluaran </label>
+    <input
+            type = "text"
+            name = "namapengeluaran"
+            id = "namaPengeluaran"
+            th:field = "*{namaPengeluaran}"
+            class = "form-control"
+            placeholder="Masukan nama pengeluaran"
+    />
+  </div>
+
+  <div class ="form-group">
+    <label> Jumlah biaya </label>
+    <input
+            type = "text"
+            name = "biaya"
+            id = "biaya"
+            th:field = "*{biaya}"
+            class = "form-control"
+            placeholder="Masukan biaya pengleluaran"
+    />
+  </div>
+
+  <div class = "modal-footer">
+    <button type="submit" class = "btn btn-primary">
+      Submit
+    </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  </div>
+</form>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  $("#ubahPengeluaran).submit(function(event) {
+    event.preventDefault(); //prevent default action
+    let post_url = $(this).attr("action"); //get form action url
+    let request_method = $(this).attr("method"); //get form GET/POST method
+    let form_data = $(this).serialize(); //Encode form elements for submission
+    $.ajax({
+      url: post_url,
+      type: request_method,
+      data: form_data
+    }).done(function(response) { //
+      let pattern = /6e13fc166d54411be233d08296755631/i;
+      let result = response.match(pattern);
+      if(result)
+      {
+        $("#server-results").html(response);
+      }
+      else
+      {
+        $('#pengeluaranEdit').modal('hide');
+        confirm("DATA BERHASIL DIUBAH");
+      }
+
+    });
+  });
+
+  /*]]>*/
+</script>
