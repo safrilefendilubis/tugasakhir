@@ -61,6 +61,3 @@ public class ReadTextFileSB {
 		System.out.println("BYTE FILE => "+rtfSB.getByteOfFile());
 	}
 }
-/*
-a
- */

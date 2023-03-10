@@ -17,6 +17,3 @@ class ApiValidationError {
         this.field = field;
     }
 }
-/*
-a
- */

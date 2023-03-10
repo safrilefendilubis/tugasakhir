@@ -1,12 +1,6 @@
-package com.juaracoding.DBLaundry.utils;/*
-IntelliJ IDEA 2022.3.2 (Ultimate Edition)
-Build #IU-223.8617.56, built on January 26, 2023
-@Author User a.k.a. Safril Efendi Lubis
-Java Developer
-Created on 2/16/2023 7:32 PM
-@Last Modified 2/16/2023 7:32 PM
-Version 1.1
-*/
+package com.juaracoding.DBLaundry.utils;
+
+
 import org.apache.log4j.Logger;
 
 public class LoggingFile {

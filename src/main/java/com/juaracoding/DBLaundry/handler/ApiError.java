@@ -1,7 +1,7 @@
 package com.juaracoding.DBLaundry.handler;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.juaracoding.DBLaundry.utils.ConstantMessageH;
+import com.juaracoding.DBLaundry.utils.ConstantMessage;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ public class ApiError {
     ApiError(HttpStatus serverResponse, Throwable ex) {
         this();
         this.serverResponse = serverResponse;
-        this.message = ConstantMessageH.ERROR_UNEXPECTED;
+        this.message = ConstantMessage.ERROR_UNEXPECTED;
     }
 
     ApiError(HttpStatus serverResponse, String message, Throwable ex,String path,String errorCode) {
