@@ -1,11 +1,13 @@
-<form  th:action="@{/api/v1/pengeluaran/{id} (id=${pengeluaran.idPengeluaran})}" th:object="pengeluaran" method="POST">
+<form  th:action="@{/api/mgmnt/v1/pengeluaran/edit/{id} (id=${pengeluaran.idPesanan})}"
+       th:object = "${pesanan}" method="POST" id="ubahPesanan"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
+  <input type="hidden" value="427d39e98d748ad4e925cfedc738c293" /><!-- form generate id security of front end -->
   <div class ="form-group">
     <label> Nama Pengeluaran </label>
     <input
             type = "text"
             name = "namapengeluaran"
             id = "namaPengeluaran"
-            th:field = "*{namaPengeluaran}"
+            th:field = "*{}"
             class = "form-control"
             placeholder="Masukan nama pengeluaran"
     />
@@ -33,7 +35,8 @@
 
 <script th:inline="javascript">
   /*<![CDATA[*/
-  $("#ubahPengeluaran).submit(function(event) {
+
+  $("#ubahPesanan").submit(function(event) {
     event.preventDefault(); //prevent default action
     let post_url = $(this).attr("action"); //get form action url
     let request_method = $(this).attr("method"); //get form GET/POST method
@@ -43,7 +46,7 @@
       type: request_method,
       data: form_data
     }).done(function(response) { //
-      let pattern = /6e13fc166d54411be233d08296755631/i;
+      let pattern = /427d39e98d748ad4e925cfedc738c293/i;
       let result = response.match(pattern);
       if(result)
       {
@@ -51,8 +54,8 @@
       }
       else
       {
-        $('#pengeluaranEdit').modal('hide');
-        confirm("DATA BERHASIL DIUBAH");
+        $('#editPesanan').modal('hide');
+        confirm("DATA BERHASIL DISIMPAN");
       }
 
     });

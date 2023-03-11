@@ -33,14 +33,17 @@ public class Pengeluaran {
     @Column(name = "CreatedDate")
     private Date createdDate = new Date();
 
-    @Column(name = "ModifiedDate")
-    private LocalDate updatedDate;
-
     @Column(name = "ModifiedBy")
     private byte modifiedBy = 1;
 
     @Column(name = "IsDelete")
-    private byte isDelete = 0;
+    private byte isDelete = 1;
+
+    @Column(name = "CreatedBy")
+    private byte createdBy;
+
+    @Column(name = "ModifiedDate")
+    private Date modifiedDate;
     /*
      * End Audit Trails
      * */
@@ -77,14 +80,6 @@ public class Pengeluaran {
         this.createdDate = createdDate;
     }
 
-    public LocalDate getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(LocalDate updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
     public byte getModifiedBy() {
         return modifiedBy;
     }
@@ -99,5 +94,21 @@ public class Pengeluaran {
 
     public void setIsDelete(byte isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public byte getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(byte createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

@@ -167,5 +167,8 @@ public class ConstantMessage {
     public final static String WARNING_USERNAME_MAX_LENGTH = "USERNAME MAKSIMAL 10 KARAKTER DAN MINIMAL 5 KARAKTER";
 
     public final static String WARNING_DEMO_NOT_EXISTS = "DEMO TIDAK DITEMUKAN";
+    public final static String WARNING_PENGELUARAN_NOT_EXISTS = "PENGELUARAN TIDAK DITEMUKAN";
+
+    public final static String WARNING_PESANAN_NOT_EXISTS = "PESANAN TIDAK DITEMUKAN";
 
 }

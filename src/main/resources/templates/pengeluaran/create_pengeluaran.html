@@ -1,26 +1,36 @@
-<form th:action="@{/api/v1/pengeluaran}" th:object = "${pengeluaran}" method="POST" id="buatPengeluaran">
+<form th:action="@{/api/mgmnt/v1/pengeluaran/new}" th:object = "${pengeluaran}" method="POST" id="buatPengeluaran"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
+  <input type="hidden" value="427d39e98d748ad4e925cfedc738c293" /><!-- form generate id security of front end -->
+
+  <div th:if="${#fields.hasErrors('global')}" class="error-box error-danger" >
+    <p th:each="err : ${#fields.errors('global')}" th:text="${err}"  class="error"/>
+  </div>
   <div class ="form-group">
-    <label> Nama pengeluaran </label>
+    <label> Nama Pengeluaran </label>
     <input
             type = "text"
             name = "namaPengeluaran"
             th:field = "*{namaPengeluaran}"
             class = "form-control"
-            placeholder="Masukan nama pengeluaran"
+            placeholder="Masukkan Nama Pengeluaran"
     />
+    <ul>
+      <li th:each="err : ${#fields.errors('namaPengeluaran')}" th:text="${err}" class="error" />
+    </ul>
   </div>
 
   <div class ="form-group">
-    <label> Jumlah biaya </label>
+    <label> Biaya Pengeluaran </label>
     <input
             type = "text"
-            name = "biaya"
+            name = "biayaPengeluaran"
             th:field = "*{biaya}"
             class = "form-control"
-            placeholder="Masukan biaya pengeluaran"
+            placeholder="Masukkan Jumlah Biaya"
     />
+    <ul>
+      <li th:each="err : ${#fields.errors('biaya')}" th:text="${err}" class="error" />
+    </ul>
   </div>
-
   <div class = "modal-footer">
     <button type="submit" class = "btn btn-primary">
       Submit
@@ -42,7 +52,7 @@
       type: request_method,
       data: form_data
     }).done(function(response) { //
-      let pattern = /e97e7c60095d4cd505cce7a56c376dba/i;
+      let pattern = /427d39e98d748ad4e925cfedc738c293/i;
       let result = response.match(pattern);
       if(result)
       {
@@ -50,7 +60,7 @@
       }
       else
       {
-        $('#pengeluaranAdd').modal('hide');
+        $('#addPengeluaran').modal('hide');
         confirm("DATA BERHASIL DISIMPAN");
       }
 

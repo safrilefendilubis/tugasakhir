@@ -9,7 +9,13 @@ Version 1.1
 */
 
 import com.juaracoding.DBLaundry.model.Pengeluaran;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PengeluaranRepo extends JpaRepository<Pengeluaran,Long> {
+    Page<Pengeluaran> findByIsDelete(Pageable page , byte byteIsDelete);
+    Page<Pengeluaran> findByIsDeleteAndNamaPengeluaranContainsIgnoreCase(Pageable page , byte byteIsDelete, String values);
+    Page<Pengeluaran> findByIsDeleteAndIdPengeluaranContainsIgnoreCase(Pageable page , byte byteIsDelete, Long values);
+    Page<Pengeluaran> findByIsDeleteAndBiayaContainsIgnoreCase(Pageable page , byte byteIsDelete, String values);
 }
