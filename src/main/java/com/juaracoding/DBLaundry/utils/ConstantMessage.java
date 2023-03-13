@@ -30,6 +30,7 @@ public class ConstantMessage {
 
     /*Global*/
     public final static String SUCCESS_SAVE = "DATA BERHASIL DIBUAT";
+    public final static String SUCCESS_DELETE = "DATA BERHASIL DIHAPUS";
     public final static String SUCCESS_UPDATE = "DATA BERHASIL DIPERBAHARUI";
     public final static String ERROR_UPLOAD_CSV = "UPLOAD FILE GAGAL ";
     public final static String ERROR_EMPTY_FILE = "FILE KOSONG , TIDAK ADA DATA !! ";
@@ -83,6 +84,7 @@ public class ConstantMessage {
     public final static String ERROR_USRNAME_IS_NULL = "USERNAME TIDAK BOLEH NULL!!";
     public final static String ERROR_USRNAME_IS_EMPTY = "USERNAME TIDAK BOLEH KOSONG!!";
     public final static String ERROR_PASSWORD_MAX_MIN_LENGTH = "PASSWORD MIN 8 MAKS 25  KARAKTER!!";
+    public final static String ERROR_LOGIN_MAX_MIN_LENGTH = "PASSWORD MIN 5 MAKS 50  KARAKTER!!";
     public final static String ERROR_PASSWORD_IS_NULL = "PASSWORD TIDAK BOLEH NULL!!";
     public final static String ERROR_PASSWORD_IS_EMPTY = "PASSWORD TIDAK BOLEH KOSONG!!";
     public final static String ERROR_NAMALENGKAP_MAX_MIN_LENGTH = "NAMA LENGKAP MIN 8 MAKS 40  KARAKTER!!";
@@ -125,6 +127,7 @@ public class ConstantMessage {
     public final static String WARNING_MENU_HEADER_NOT_EXISTS = "GROUP MENU TIDAK DOTEMUKAN";
     public final static String WARNING_HARGA_PAKET_NULL = "HARGA PAKET TIDAK BOLEH NULL";
 
+    public final static String WARNING_PAKET_LAYANAN_NOT_EXISTS = "PAKET LAYANAN TIDAK DITEMUKAN";
     public final static String WARNING_HARGA_PAKET_EMPTY = "HARGA PAKET TIDAK BOLEH EMPTY";
 
     public final static String WARNING_HARGA_PAKET_BLANK = "HARGA PAKET TIDAK BOLEH BLANK";
@@ -171,4 +174,15 @@ public class ConstantMessage {
 
     public final static String WARNING_PESANAN_NOT_EXISTS = "PESANAN TIDAK DITEMUKAN";
 
+    /*
+    * PELANGGAN
+    * */
+
+    public final static String WARNING_PELANGGAN_NOT_EXISTS = "PELANGGAN TIDAK DITEMUKAN";
+
+    /*
+    * PEMBAYARAN
+    * */
+
+    public final static String WARNING_PEMBAYARAN_NOT_EXISTS = "PEMBAYARAN TIDAK DITEMUKAN";
 }

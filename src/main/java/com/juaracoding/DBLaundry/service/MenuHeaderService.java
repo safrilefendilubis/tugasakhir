@@ -23,7 +23,6 @@ import java.util.*;
 /*
     KODE MODUL 02
  */
-
 @Service
 @Transactional
 public class MenuHeaderService {
@@ -42,11 +41,15 @@ public class MenuHeaderService {
     private Map<String,String> mapColumnSearch = new HashMap<String,String>();
     private String [] strColumnSearch = new String[2];
 
+
     @Autowired
     public MenuHeaderService(MenuHeaderRepo menuHeaderRepo) {
         strExceptionArr[0] = "MenuHeaderService";
+        mapColumn();
         this.menuHeaderRepo = menuHeaderRepo;
     }
+
+
 
     public Map<String, Object> saveMenuHeader(MenuHeader menuHeader, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
@@ -58,6 +61,8 @@ public class MenuHeaderService {
                 return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                         HttpStatus.NOT_ACCEPTABLE,null,"FV02001",request);
             }
+            menuHeader.setDeskripsiMenuHeader(menuHeader.getDeskripsiMenuHeader());
+            menuHeader.setNamaMenuHeader(menuHeader.getNamaMenuHeader());
             menuHeader.setCreatedBy(Integer.parseInt(strUserIdz.toString()));
             menuHeader.setCreatedDate(new Date());
             menuHeaderRepo.save(menuHeader);
@@ -71,8 +76,8 @@ public class MenuHeaderService {
                 HttpStatus.CREATED, null, null, request);
     }
 
-    public Map<String, Object> updateMenu(Long idMenuHeader,MenuHeader menuHeader, WebRequest request) {
-        String strMessage = ConstantMessage.SUCCESS_SAVE;
+    public Map<String, Object> updateMenuHeader(Long idMenuHeader, MenuHeader menuHeader, WebRequest request) {
+        String strMessage = ConstantMessage.SUCCESS_UPDATE;
         Object strUserIdz = request.getAttribute("USR_IDZ",1);
 
         try {
@@ -145,33 +150,38 @@ public class MenuHeaderService {
                         null,
                         null);
     }
-    public Map<String,Object> findAllMenuHeader()//KHUSUS UNTUK FORM INPUT SAJA
+
+    public Map<String,Object> findAllMenuHeader(Pageable pageable, WebRequest request)
     {
         List<MenuHeaderDTO> listMenuHeaderDTO = null;
         Map<String,Object> mapResult = null;
-        Page<MenuHeader> pageMenu = null;
-        List<MenuHeader> listMenu = null;
+        Page<MenuHeader> pageMenuHeader = null;
+        List<MenuHeader> listMenuHeader = null;
 
         try
         {
-            listMenu = menuHeaderRepo.findByIsDelete((byte)1);
-            if(listMenu.size()==0)
+            pageMenuHeader = menuHeaderRepo.findByIsDelete(pageable,(byte)1);
+            listMenuHeader = pageMenuHeader.getContent();
+            if(listMenuHeader.size()==0)
             {
                 return new ResponseHandler().
                         generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
                                 HttpStatus.OK,
-                                null,
-                                null,
-                                null);
+                                transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN
+                                "FV05005",
+                                request);
             }
-            listMenuHeaderDTO = modelMapper.map(listMenu, new TypeToken<List<MenuHeaderDTO>>() {}.getType());
+            listMenuHeaderDTO = modelMapper.map(listMenuHeader, new TypeToken<List<MenuHeaderDTO>>() {}.getType());
+            mapResult = transformToDTO.transformObject(objectMapper,listMenuHeaderDTO,pageMenuHeader,mapColumnSearch);
         }
         catch (Exception e)
         {
-            strExceptionArr[1] = "findAllMenu(Pageable pageable, WebRequest request) --- LINE 121";
+            strExceptionArr[1] = "findAllMenuHeader(Pageable pageable, WebRequest request) --- LINE 177";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_INTERNAL_SERVER,
-                    HttpStatus.INTERNAL_SERVER_ERROR, null, "FE03003", null);
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN
+                    "FE05003", request);
         }
 
 
@@ -179,12 +189,114 @@ public class MenuHeaderService {
         return new ResponseHandler().
                 generateModelAttribut(ConstantMessage.SUCCESS_FIND_BY,
                         HttpStatus.OK,
-                        listMenuHeaderDTO,
+                        mapResult,
                         null,
                         null);
     }
 
-    public Map<String,Object> findById(Long id)
+    public Map<String,Object> findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst)
+    {
+        Page<MenuHeader> pageMenuHeader = null;
+        List<MenuHeader> listMenuHeader = null;
+        List<MenuHeaderDTO> listMenuHeaderDTO = null;
+        Map<String,Object> mapResult = null;
+
+        try
+        {
+            if(columFirst.equals("id"))
+            {
+                if(!valueFirst.equals("") && valueFirst!=null)
+                {
+                    try
+                    {
+                        Long.parseLong(valueFirst);
+                    }
+                    catch (Exception e)
+                    {
+                        strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 212";
+                        LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+                        return new ResponseHandler().
+                                generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
+                                        HttpStatus.OK,
+                                        transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN
+                                        "FE05004",
+                                        request);
+                    }
+                }
+            }
+            pageMenuHeader = getDataByValue(pageable,columFirst,valueFirst);
+            listMenuHeader = pageMenuHeader.getContent();
+            if(listMenuHeader.size()==0)
+            {
+                return new ResponseHandler().
+                        generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
+                                HttpStatus.OK,
+                                transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN EMPTY
+                                "FV05006",
+                                request);
+            }
+            listMenuHeaderDTO = modelMapper.map(listMenuHeader, new TypeToken<List<MenuHeaderDTO>>() {}.getType());
+            mapResult = transformToDTO.transformObject(objectMapper,listMenuHeaderDTO,pageMenuHeader,mapColumnSearch);
+        }
+
+        catch (Exception e)
+        {
+            strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 243";
+            LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+            return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),
+                    "FE05005", request);
+        }
+        return new ResponseHandler().
+                generateModelAttribut(ConstantMessage.SUCCESS_FIND_BY,
+                        HttpStatus.OK,
+                        mapResult,
+                        null,
+                        request);
+    }
+//    public Map<String,Object> findAllMenuHeader()//KHUSUS UNTUK FORM INPUT SAJA di Menu Child nya
+//    {
+//        List<MenuHeaderDTO> listMenuHeaderDTO = null;
+//        Map<String,Object> mapResult = null;
+//        Page<MenuHeader> pageMenu = null;
+//        List<MenuHeader> listMenu = null;
+//
+//        try
+//        {
+//            listMenu = menuHeaderRepo.findByIsDelete((byte)1);
+//            if(listMenu.size()==0)
+//            {
+//                return new ResponseHandler().
+//                        generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
+//                                HttpStatus.OK,
+//                                null,
+//                                null,
+//                                null);
+//            }
+//            listMenuHeaderDTO = modelMapper.map(listMenu, new TypeToken<List<MenuHeaderDTO>>() {}.getType());
+//        }
+//        catch (Exception e)
+//        {
+//            strExceptionArr[1] = "findAllMenu(Pageable pageable, WebRequest request) --- LINE 121";
+//            LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+//            return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_INTERNAL_SERVER,
+//                    HttpStatus.INTERNAL_SERVER_ERROR, null, "FE03004", null);
+//        }
+//
+//
+//
+//
+//
+//        return new ResponseHandler().
+//                generateModelAttribut(ConstantMessage.SUCCESS_FIND_BY,
+//                        HttpStatus.OK,
+//                        listMenuHeaderDTO,
+//                        null,
+//                        null);
+//    }
+
+    public Map<String,Object> findById(Long id,WebRequest request)
     {
         MenuHeader menuHeader = menuHeaderRepo.findById(id).orElseThrow (
                 ()-> null
@@ -194,7 +306,7 @@ public class MenuHeaderService {
             return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_MENU_NOT_EXISTS,
                     HttpStatus.NOT_ACCEPTABLE,
                     transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                    "FV03005",null);
+                    "FV03004",request);
         }
         MenuDTO menuDTO = modelMapper.map(menuHeader, new TypeToken<MenuDTO>() {}.getType());
         return new ResponseHandler().
@@ -202,7 +314,70 @@ public class MenuHeaderService {
                         HttpStatus.OK,
                         menuDTO,
                         null,
-                        null);
+                        request);
+    }
+
+    public List<MenuHeaderDTO> getAllMenuHeader()//KHUSUS UNTUK FORM INPUT SAJA
+    {
+        List<MenuHeaderDTO> listMenuHeaderDTO = null;
+        List<MenuHeader> listMenuHeader = null;
+        try
+        {
+            listMenuHeader = menuHeaderRepo.findByIsDelete((byte)1);
+            if(listMenuHeader.size()==0)
+            {
+                return new ArrayList<MenuHeaderDTO>();
+            }
+            listMenuHeaderDTO = modelMapper.map(listMenuHeader, new TypeToken<List<MenuHeaderDTO>>() {}.getType());
+        }
+        catch (Exception e)
+        {
+            strExceptionArr[1] = "getAllDemo() --- LINE 223";
+            LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+            return listMenuHeaderDTO;
+        }
+        return listMenuHeaderDTO;
+    }
+
+    public Map<String, Object> deleteMenuHeader(Long idMenuHeader, WebRequest request) {
+        String strMessage = ConstantMessage.SUCCESS_DELETE;
+        Object strUserIdz = request.getAttribute("USR_ID",1);
+        MenuHeader nextMenuHeader = null;
+        try {
+            nextMenuHeader = menuHeaderRepo.findById(idMenuHeader).orElseThrow(
+                    ()->null
+            );
+
+            if(nextMenuHeader==null)
+            {
+                return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_DEMO_NOT_EXISTS,
+                        HttpStatus.NOT_ACCEPTABLE,
+                        transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
+                        "FV05006",request);
+            }
+            if(strUserIdz==null)
+            {
+                return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
+                        HttpStatus.NOT_ACCEPTABLE,
+                        null,
+                        "FV05007",request);
+            }
+            nextMenuHeader.setIsDelete((byte)0);
+            nextMenuHeader.setModifiedBy(Integer.parseInt(strUserIdz.toString()));
+            nextMenuHeader.setModifiedDate(new Date());
+
+        } catch (Exception e) {
+            strExceptionArr[1] = " deleteMenuHeader(Long idDemo, WebRequest request) --- LINE 344";
+            LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+            return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
+                    HttpStatus.BAD_REQUEST,
+                    transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
+                    "FE05007", request);
+        }
+        return new ResponseHandler().generateModelAttribut(strMessage,
+                HttpStatus.OK,
+                transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
+                null, request);
     }
 
     public Map<String,String> mapColumn()
@@ -219,6 +394,11 @@ public class MenuHeaderService {
 
     public Page<MenuHeader> getDataByValue(Pageable pageable, String paramColumn, String paramValue)
     {
+        if(paramValue.equals(""))
+        {
+            return menuHeaderRepo.findByIsDelete(pageable,(byte) 1);
+        }
+
         if(paramColumn.equals("id"))
         {
             menuHeaderRepo.findByIsDeleteAndIdMenuHeader(pageable,(byte) 1,paramValue);
@@ -228,6 +408,8 @@ public class MenuHeaderService {
             menuHeaderRepo.findByIsDeleteAndDeskripsiMenuHeader(pageable,(byte) 1,paramValue);
         }
 
-        return menuHeaderRepo.findByIsDeleteAndIdMenuHeader(pageable,(byte) 1,paramValue);
+        return menuHeaderRepo.findByIsDelete(pageable,(byte) 1);
     }
+
+
 }

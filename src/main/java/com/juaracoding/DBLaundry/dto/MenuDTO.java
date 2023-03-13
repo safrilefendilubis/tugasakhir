@@ -1,37 +1,34 @@
 package com.juaracoding.DBLaundry.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.juaracoding.DBLaundry.utils.ConstantMessage;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class MenuDTO {
 
     private Long idMenu;
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @Length(message = ConstantMessage.WARNING_MENU_NAME_LENGTH,max = 25)
     private String namaMenu;
 
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @Length(message = ConstantMessage.WARNING_MENU_NAME_LENGTH,max = 50)
     private String pathMenu;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @Length(message = ConstantMessage.WARNING_MENU_NAME_LENGTH,max = 50)
     private String endPoint;
 
 
-    @JsonIgnoreProperties("listMenuAkses")
+//    @JsonIgnoreProperties("listMenuAkses")
     private List<AksesDTO> listAksesMenu;
 
-    @NotNull
+//    @NotNull
     private MenuHeaderDTO menuHeader;
 
     public Long getIdMenu() {

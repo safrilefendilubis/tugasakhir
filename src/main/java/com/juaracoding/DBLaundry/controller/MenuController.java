@@ -47,6 +47,7 @@ public class MenuController {
 
     private MappingAttribute mappingAttribute = new MappingAttribute();
 
+    @Autowired
     public MenuController(MenuService menuService, MenuHeaderService menuHeaderService) {
         strExceptionArr[0] = "MenuController";
         mapSorting();
@@ -65,7 +66,7 @@ public class MenuController {
             }
         }
         model.addAttribute("menu", new MenuDTO());
-        model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());//untuk parent nya
+        model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());//untuk parent nya
         return "menu/create_menu";
     }
 
@@ -85,7 +86,7 @@ public class MenuController {
         {
             MenuDTO menuDTOForSelect = (MenuDTO) objectMapper.get("data");
             model.addAttribute("menu", menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());
+            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
 //            System.out.println("selectedValues -> "+menuDTOForSelect.getMenuHeader().getIdMenuHeader());
             model.addAttribute("selectedValues", menuDTOForSelect.getMenuHeader().getIdMenuHeader());
             return "menu/edit_menu";
@@ -94,7 +95,7 @@ public class MenuController {
         else
         {
             model.addAttribute("menu", new MenuDTO());
-            return "redirect:/api/usrmgmnt/menu/default";
+            return "redirect:/api/usrmgmnt/v1/menu/default";
         }
     }
     @PostMapping("/v1/menu/new")
@@ -118,7 +119,7 @@ public class MenuController {
         {
             model.addAttribute("menu",menuDTO);
             model.addAttribute("status","error");
-            model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());
+            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
 
             return "menu/create_menu";
         }
@@ -140,7 +141,7 @@ public class MenuController {
         if(!isValid)
         {
             model.addAttribute("menu",menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());
+            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
             return "menu/create_menu";
         }
         /* END OF VALIDATION */
@@ -163,7 +164,7 @@ public class MenuController {
         else
         {
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
-            model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());
+            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
             model.addAttribute("menu",new MenuDTO());
             model.addAttribute("status","error");
             return "menu/create_menu";
@@ -171,8 +172,8 @@ public class MenuController {
     }
 
     @PostMapping("/v1/menu/edit/{id}")
-    public String doRegis(@ModelAttribute("menu")
-                          @Valid MenuDTO menuDTO
+    public String editMenu(@ModelAttribute("menu")
+                           @Valid MenuDTO menuDTO
             , BindingResult bindingResult
             , Model model
             , WebRequest request
@@ -183,7 +184,7 @@ public class MenuController {
         if(bindingResult.hasErrors())
         {
             model.addAttribute("menu",menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());
+            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
             return "menu/edit_menu";
         }
         Boolean isValid = true;
@@ -204,7 +205,7 @@ public class MenuController {
         if(!isValid)
         {
             model.addAttribute("menu",menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());
+            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
             return "menu/edit_menu";
         }
         /* END OF VALIDATION */
@@ -226,7 +227,7 @@ public class MenuController {
         {
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
             model.addAttribute("menu",new MenuDTO());
-            model.addAttribute("listMenuHeader", menuHeaderService.findAllMenuHeader());
+            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
             return "menu/edit_menu";
         }
     }

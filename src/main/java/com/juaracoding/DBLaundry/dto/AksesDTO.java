@@ -1,9 +1,5 @@
 package com.juaracoding.DBLaundry.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.juaracoding.DBLaundry.model.Divisi;
-import com.juaracoding.DBLaundry.model.Menu;
-
 import java.util.List;
 
 public class AksesDTO {
@@ -12,10 +8,10 @@ public class AksesDTO {
 
     private String namaAkses;
 
-    @JsonIgnoreProperties("listAksesMenu")
-    private List<Menu> listMenuAkses;
+//    @JsonIgnoreProperties("listAksesMenu")
+    private List<MenuDTO> listMenuAkses;
 
-    private Divisi divisi;
+    private DivisiDTO divisi;
 
     public Long getIdAkses() {
         return idAkses;
@@ -33,19 +29,25 @@ public class AksesDTO {
         this.namaAkses = namaAkses;
     }
 
-    public List<Menu> getListMenuAkses() {
+    public List<MenuDTO> getListMenuAkses() {
         return listMenuAkses;
     }
 
-    public void setListMenuAkses(List<Menu> listMenuAkses) {
+    public void setListMenuAkses(List<MenuDTO> listMenuAkses) {
         this.listMenuAkses = listMenuAkses;
     }
 
-    public Divisi getDivisi() {
+    public DivisiDTO getDivisi() {
         return divisi;
     }
 
-    public void setDivisi(Divisi divisi) {
+    public void setDivisi(DivisiDTO divisi) {
         this.divisi = divisi;
     }
+
+    @Override
+    public String toString() {
+        return this.namaAkses;
+    }
+
 }

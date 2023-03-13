@@ -1,47 +1,39 @@
-package com.juaracoding.DBLaundry.model;/*
-IntelliJ IDEA 2022.3.2 (Ultimate Edition)
-Build #IU-223.8617.56, built on January 26, 2023
-@Author User a.k.a. Safril Efendi Lubis
-Java Developer
-Created on 3/1/2023 11:21 PM
-@Last Modified 3/1/2023 11:21 PM
-Version 1.1
-*/
-
-import com.juaracoding.DBLaundry.utils.ConstantMessage;
+package com.juaracoding.DBLaundry.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name = "MstPaketLayanan")
 public class PaketLayanan {
 
     @Id
-    @Column(name = "IDListHarga",unique = true)
+    @Column(name = "IDListHarga")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idListHarga;
 
-    @NotEmpty(message = ConstantMessage.WARNING_NAMA_PAKET_EMPTY)
-    @NotBlank(message = ConstantMessage.WARNING_NAMA_PAKET_BLANK)
-    @Column(name = "NamaLayanan")
-    private String namaLayanan;
+    @Column(name = "NamaPaket")
+    private String namaPaket;
 
-    @NotEmpty(message = ConstantMessage.WARNING_HARGA_PAKET_EMPTY)
-    @NotNull(message = ConstantMessage.WARNING_HARGA_PAKET_NULL)
-    @NotBlank(message = ConstantMessage.WARNING_HARGA_PAKET_BLANK)
-    @Column(name = "Harga",nullable = false)
-    private Long harga;
+    @Column(name = "Harga")
+    private Double hargaPerKilo;
 
-    @NotEmpty(message = ConstantMessage.WARNING_TIPE_PAKET_EMPTY)
-    @NotNull(message = ConstantMessage.WARNING_TIPE_PAKET_NULL)
-    @NotBlank(message = ConstantMessage.WARNING_TIPE_PAKET_BLANK)
-    @ManyToOne
-    @JoinColumn(name = "IDTipe")
-    private TipeLayanan tipeLayanan;
+    @Column(name = "TipeLayanan")
+    private String tipeLayanan;//komponen select di
 
+    @Column(name ="CreatedDate" , nullable = false)
+    private Date createdDate = new Date();
+
+    @Column(name = "CreatedBy", nullable = false)
+    private Integer createdBy=1;
+
+    @Column(name = "ModifiedDate")
+    private Date modifiedDate;
+    @Column(name = "ModifiedBy")
+    private Integer modifiedBy;
+
+    @Column(name = "IsDelete", nullable = false)
+    private Byte isDelete = 1;
 
     public Long getIdListHarga() {
         return idListHarga;
@@ -51,27 +43,67 @@ public class PaketLayanan {
         this.idListHarga = idListHarga;
     }
 
-    public String getNamaLayanan() {
-        return namaLayanan;
+    public String getNamaPaket() {
+        return namaPaket;
     }
 
-    public void setNamaLayanan(String namaLayanan) {
-        this.namaLayanan = namaLayanan;
+    public void setNamaPaket(String namaPaket) {
+        this.namaPaket = namaPaket;
     }
 
-    public Long getHarga() {
-        return harga;
+    public Double getHargaPerKilo() {
+        return hargaPerKilo;
     }
 
-    public void setHarga(Long harga) {
-        this.harga = harga;
+    public void setHargaPerKilo(Double hargaPerKilo) {
+        this.hargaPerKilo = hargaPerKilo;
     }
 
-    public TipeLayanan getTipeLayanan() {
+    public String getTipeLayanan() {
         return tipeLayanan;
     }
 
-    public void setTipeLayanan(TipeLayanan tipeLayanan) {
+    public void setTipeLayanan(String tipeLayanan) {
         this.tipeLayanan = tipeLayanan;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Integer getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Integer createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public Integer getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(Integer modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public Byte getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Byte isDelete) {
+        this.isDelete = isDelete;
     }
 }

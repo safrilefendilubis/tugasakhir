@@ -1,13 +1,14 @@
-<form  th:action="@{/api/mgmnt/v1/pengeluaran/edit/{id} (id=${pengeluaran.idPesanan})}"
-       th:object = "${pesanan}" method="POST" id="ubahPesanan"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
-  <input type="hidden" value="427d39e98d748ad4e925cfedc738c293" /><!-- form generate id security of front end -->
+<form  th:action="@{/api/mgmnt/v1/pengeluaran/edit/{id} (id=${pengeluaran.idPengeluaran})}"
+       th:object = "${pengeluaran}" method="POST" id="ubahPengeluaran"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
+  <input type="hidden" value="af3ac95f3f0d86d42670f640ef125494" /><!-- form generate id security of front end -->
   <div class ="form-group">
     <label> Nama Pengeluaran </label>
     <input
             type = "text"
             name = "namapengeluaran"
             id = "namaPengeluaran"
-            th:field = "*{}"
+            th:field = "*{namaPengeluaran}"
+            th:value = "*{namaPengeluaran}"
             class = "form-control"
             placeholder="Masukan nama pengeluaran"
     />
@@ -20,6 +21,7 @@
             name = "biaya"
             id = "biaya"
             th:field = "*{biaya}"
+            th:value = "*{biaya}"
             class = "form-control"
             placeholder="Masukan biaya pengleluaran"
     />
@@ -36,7 +38,7 @@
 <script th:inline="javascript">
   /*<![CDATA[*/
 
-  $("#ubahPesanan").submit(function(event) {
+  $("#ubahPengeluaran").submit(function(event) {
     event.preventDefault(); //prevent default action
     let post_url = $(this).attr("action"); //get form action url
     let request_method = $(this).attr("method"); //get form GET/POST method
@@ -46,7 +48,7 @@
       type: request_method,
       data: form_data
     }).done(function(response) { //
-      let pattern = /427d39e98d748ad4e925cfedc738c293/i;
+      let pattern = /af3ac95f3f0d86d42670f640ef125494/i;
       let result = response.match(pattern);
       if(result)
       {
@@ -54,7 +56,7 @@
       }
       else
       {
-        $('#editPesanan').modal('hide');
+        $('#editPengeluaran').modal('hide');
         confirm("DATA BERHASIL DISIMPAN");
       }
 
