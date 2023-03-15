@@ -8,6 +8,8 @@ Created on 10/03/2023 15:39
 Version 1.1
 */
 
+import java.util.Date;
+
 public class PengeluaranDTO {
 
     private Long idPengeluaran;
@@ -15,6 +17,8 @@ public class PengeluaranDTO {
     private String namaPengeluaran;
 
     private String biaya;
+
+    private Date createdDate;
 
     public Long getIdPengeluaran() {
         return idPengeluaran;
@@ -38,5 +42,13 @@ public class PengeluaranDTO {
 
     public void setBiaya(String biaya) {
         this.biaya = biaya;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 }

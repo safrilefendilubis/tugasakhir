@@ -1,5 +1,5 @@
-<form th:action="@{/api/usrmgmnt/v1/pesanan/edit/{id}(id=${pesanan.idPesanan})}" th:object = "${pesanan}" method="POST" id="ubahPesanan"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
-	<input type="hidden" value="b203f4720d7f4db62d8988c0f6207b80" /><!-- form generate id security of front end -->
+<form th:action="@{/api/mgmnt/v1/pesanan/new}" th:object = "${pesanan}" method="POST" id="buatPesanan"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
+	<input type="hidden" value="0996eae8922a2eda12293443a12f3802" /><!-- form generate id security of front end -->
 
 	<div th:if="${#fields.hasErrors('global')}" class="error-box error-danger" >
 		<p th:each="err : ${#fields.errors('global')}" th:text="${err}"  class="error"/>
@@ -19,20 +19,20 @@
 	</div>
 
 	<div class ="form-group">
-		<label> Nama Pelanggan </label>
-		<input
-				disabled
-				type = "text"
-				name = "pelanggan"
-				class = "form-control"
-				th:value="${pesanan.pelanggan?.namaLengkap}"
-		/>
+		<label> PELANGGAN</label>
+		<select form="buatPesanan" th:field="*{pelanggan.idPelanggan}" class="form-control" name="group-pelanggan"id="group-pelanggan">
+			<option value="" selected="selected" disabled hidden="hidden">---pilih pelanggan---</option>
+			<option th:each="customer: ${listPelanggan}" th:value="${customer.idPelanggan}" th:text="${customer.namaLengkap}"></option>
+		</select>
+		<ul>
+			<li th:each="err : ${#fields.errors('pelanggan.idPelanggan')}" th:text="${err}" class="error" />
+		</ul>
 	</div>
 
 	<div class ="form-group">
 		<label> TIPE LAYANAN</label>
 		<!--		<select th:object="${user}"  th:field="*{permission} class="form-control" name="permission">-->
-		<select form="ubahPesanan" th:field="*{paketLayanan.idListHarga}" class="form-control" name="group-list-harga"id="group-list-harga">
+		<select form="buatPesanan" th:field="*{paketLayanan.idListHarga}" class="form-control" name="group-list-harga"id="group-list-harga">
 			<option value="" selected="selected" disabled hidden="hidden">---pilih paket---</option>
 			<option th:each="paket: ${listPaketLayanan}" th:value="${paket.idListHarga}" th:text="${paket.namaPaket}+'--'+${paket.tipeLayanan}+'--'+${paket.hargaPerKilo}"></option>
 		</select>
@@ -44,7 +44,7 @@
 	<div class ="form-group">
 		<label> PEMBAYARAN </label>
 		<!--		<select th:object="${user}"  th:field="*{permission} class="form-control" name="permission">-->
-		<select form="ubahPesanan" th:field="*{pembayaran.idPembayaran}" class="form-control" name="group-list-pembayaran"id="group-list-pembayaran">
+		<select form="buatPesanan" th:field="*{pembayaran.idPembayaran}" class="form-control" name="group-list-pembayaran"id="group-list-pembayaran">
 			<option value="" selected="selected" disabled hidden="hidden">---pilih pembayaran---</option>
 			<option th:each="bayar: ${listPembayaran}" th:value="${bayar.idPembayaran}" th:text="${bayar.namaPembayaran}"></option>
 		</select>
@@ -74,7 +74,7 @@
               type: request_method,
               data: form_data
             }).done(function(response) { //
-            let pattern = /b203f4720d7f4db62d8988c0f6207b80/i;
+            let pattern = /0996eae8922a2eda12293443a12f3802/i;
 			let result = response.match(pattern);
             if(result)
             {
@@ -84,6 +84,7 @@
             {
 				$('#addPesanan').modal('hide');
 				confirm("DATA BERHASIL DISIMPAN");
+				location.reload();
             }
 
             });

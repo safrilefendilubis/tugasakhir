@@ -51,7 +51,7 @@
 		</ul>
 		<label> Group Menu </label>
 		<select form="ubahMenu" th:field="*{menuHeader.idMenuHeader}" class="form-control" th:value="${selectedValues}">
-			<option th:each="menuHeader: ${listMenuHeader.get('data')}" th:value="${menuHeader.idMenuHeader}" th:text="${menuHeader.namaMenuHeader}"
+			<option th:each="menuHeader: ${listMenuHeader}" th:value="${menuHeader.idMenuHeader}" th:text="${menuHeader.namaMenuHeader}"
 					th:selected="${selectedValues}" ></option>
 		</select>
 

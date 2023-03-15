@@ -52,7 +52,7 @@
 <!--		<select th:object="${user}"  th:field="*{permission} class="form-control" name="permission">-->
 		<select form="buatMenu" th:field="*{menuHeader.idMenuHeader}" class="form-control" name="groupMenu" th:object="${menu}" id="groupMenu">
 			<option th:value="NULL" hidden >---Select Group---</option>
-			<option th:each="menuHeader: ${listMenuHeader.get('data')}" th:value="${menuHeader.idMenuHeader}" th:text="${menuHeader.namaMenuHeader}"></option>
+			<option th:each="menuHeader: ${listMenuHeader}" th:value="${menuHeader.idMenuHeader}" th:text="${menuHeader.namaMenuHeader}"></option>
 		</select>
 		<ul>
 			<li th:each="err : ${#fields.errors('menuHeader')}" th:text="${err}" class="error" />

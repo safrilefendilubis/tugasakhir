@@ -115,7 +115,7 @@
 																			+ '&sizeComponent='
 																			+ ${sizeComponent}
 																			}"/>
-						ID</a>
+						No</a>
 					</th>
 					<th style="text-align: center">
 						<!--						<a class="text-light" th:href="@{'/page/' + ${currentPage} + '/?sortField=firstName&sortDir=' + ${reverseSortDir}}">-->
@@ -130,7 +130,7 @@
 																			+ '&sizeComponent='
 																			+ ${sizeComponent}
 																			}"/>
-						NO</a>
+						ID</a>
 					</th>
 					<th style="text-align: center">
 						<!--						<a class="text-light" th:href="@{'/page/' + ${currentPage} + '/?sortField=firstName&sortDir=' + ${reverseSortDir}}">-->
@@ -153,8 +153,8 @@
 				<tbody>
 				<!--				<th:block th:each="childArrays : ${data.get('content')}">-->
 				<tr th:each="childEntity,thu : ${data.get('content')}">
-					<td style="text-align: center" th:text="${childEntity.idPembayaran}"></td><!--ID FROM DB-->
 					<td style="text-align: center" th:text="${thu.index+1}"></td><!--INCREAMENT-->
+					<td style="text-align: center" th:text="${childEntity.idPembayaran}"></td><!--ID FROM DB-->
 					<td style="text-align: center" th:text="${childEntity.namaPembayaran}"></td>
 					<td>
 						<button type="button"

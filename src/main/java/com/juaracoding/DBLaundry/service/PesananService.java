@@ -9,11 +9,11 @@ Version 1.1
 */
 
 import com.juaracoding.DBLaundry.configuration.OtherConfig;
-import com.juaracoding.DBLaundry.dto.PengeluaranDTO;
+import com.juaracoding.DBLaundry.dto.PesananDTO;
 import com.juaracoding.DBLaundry.handler.ResourceNotFoundException;
 import com.juaracoding.DBLaundry.handler.ResponseHandler;
-import com.juaracoding.DBLaundry.model.Pengeluaran;
-import com.juaracoding.DBLaundry.repo.PengeluaranRepo;
+import com.juaracoding.DBLaundry.model.Pesanan;
+import com.juaracoding.DBLaundry.repo.PesananRepo;
 import com.juaracoding.DBLaundry.utils.ConstantMessage;
 import com.juaracoding.DBLaundry.utils.LoggingFile;
 import com.juaracoding.DBLaundry.utils.TransformToDTO;
@@ -35,9 +35,9 @@ KODE MODUL 12
  */
 @Service
 @Transactional
-public class PengeluaranService {
+public class PesananService {
 
-    private PengeluaranRepo pengeluaranRepo;
+    private PesananRepo pesananRepo;
     private String[] strExceptionArr = new String[2];
     @Autowired
     private ModelMapper modelMapper;
@@ -47,14 +47,25 @@ public class PengeluaranService {
     private Map<Integer, Integer> mapItemPerPage = new HashMap<Integer, Integer>();
     private String [] strColumnSearch = new String[2];
 
-    @Autowired
-    public PengeluaranService(PengeluaranRepo pengeluaranRepo) {
-        strExceptionArr[0]="PengeluaranService";
+    public PesananService(PesananRepo pesananRepo) {
+        strExceptionArr[0] = "PesananService";
         mapColumn();
-        this.pengeluaranRepo = pengeluaranRepo;
+        this.pesananRepo = pesananRepo;
     }
 
-    public Map<String, Object> savePengeluaran(Pengeluaran pengeluaran, WebRequest request) {
+    private void mapColumn()
+    {
+        mapColumnSearch.put("id","ID PESANAN");
+        mapColumnSearch.put("nama","NAMA PELANGGAN");
+        mapColumnSearch.put("layanan","LAYANAN");
+        mapColumnSearch.put("tipe","PAKET LAYANAN");
+        mapColumnSearch.put("berat","BERAT");
+        mapColumnSearch.put("harga","HARGA PER KILO");
+        mapColumnSearch.put("total","TOTAL HARGA");
+        mapColumnSearch.put("cara","CARA BAYAR");
+    }
+
+    public Map<String, Object> savePesanan(Pesanan pesanan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
 
@@ -62,59 +73,62 @@ public class PengeluaranService {
             if(strUserIdz==null)
             {
                 return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
-                        HttpStatus.NOT_ACCEPTABLE,null,"FV11001",request);
+                        HttpStatus.NOT_ACCEPTABLE,null,"FV03001",request);
             }
-            pengeluaran.setCreatedBy((byte) Integer.parseInt(strUserIdz.toString()));
-            pengeluaran.setCreatedDate(new Date());
-            pengeluaranRepo.save(pengeluaran);
+            pesanan.setCreatedBy(Integer.parseInt(strUserIdz.toString()));
+            pesanan.setCreatedDate(new Date());
+            pesananRepo.save(pesanan);
         } catch (Exception e) {
-            strExceptionArr[1] = "savePengeluaran(Pengeluaran pengeluaran, WebRequest request) --- LINE 72";
+            strExceptionArr[1] = "savePesanan(Pesanan pesanan, WebRequest request) --- LINE 55";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST,
                     transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                    "FE11001", request);
+                    "FE03001", request);
         }
         return new ResponseHandler().generateModelAttribut(strMessage,
                 HttpStatus.CREATED,
-                transformToDTO.transformObjectDataSave(objectMapper, pengeluaran.getIdPengeluaran(),mapColumnSearch),
+                transformToDTO.transformObjectDataSave(objectMapper, pesanan.getIdPesanan(),mapColumnSearch),
                 null, request);
     }
 
-    public Map<String, Object> updatePengeluaran(Long idPengeluaran,Pengeluaran pengeluaran, WebRequest request) {
-        String strMessage = ConstantMessage.SUCCESS_SAVE;
+    public Map<String, Object> updatePesanan(Long idPesanan,Pesanan pesanan, WebRequest request) {
+        String strMessage = ConstantMessage.SUCCESS_UPDATE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
-        Pengeluaran nextPengeluaran = null;
+
         try {
-            nextPengeluaran = pengeluaranRepo.findById(idPengeluaran).orElseThrow(
+            Pesanan nextPesanan = pesananRepo.findById(idPesanan).orElseThrow(
                     ()->null
             );
 
-            if(nextPengeluaran==null)
+            if(nextPesanan==null)
             {
-                return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_PENGELUARAN_NOT_EXISTS,
+                return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_PESANAN_NOT_EXISTS,
                         HttpStatus.NOT_ACCEPTABLE,
                         transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                        "FV11002",request);
+                        "FV03002",request);
             }
             if(strUserIdz==null)
             {
                 return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                         HttpStatus.NOT_ACCEPTABLE,
                         null,
-                        "FV11003",request);
+                        "FV03003",request);
             }
-            nextPengeluaran.setNamaPengeluaran(pengeluaran.getNamaPengeluaran());
-            nextPengeluaran.setModifiedBy((byte) Integer.parseInt(strUserIdz.toString()));
-            nextPengeluaran.setModifiedDate(new Date());
+            nextPesanan.setBerat(pesanan.getBerat());
+            nextPesanan.setPaketLayanan(pesanan.getPaketLayanan());
+            nextPesanan.setPembayaran(pesanan.getPembayaran());
+//            nextPesanan.setPelanggan(pesanan.getPelanggan());//INI TIDAK DIUPDATE -- BUSINESS LOGIC
+            nextPesanan.setModifiedBy(Integer.parseInt(strUserIdz.toString()));
+            nextPesanan.setModifiedDate(new Date());
 
         } catch (Exception e) {
-            strExceptionArr[1] = " updatePengeluaran(Long idPengeluaran,Pengeluaran pengeluaran, WebRequest request) --- LINE 113";
+            strExceptionArr[1] = "updatePesanan(Long idPesanan,Pesanan pesanan, WebRequest request) --- LINE 82";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST,
                     transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                    "FE11002", request);
+                    "FE03002", request);
         }
         return new ResponseHandler().generateModelAttribut(strMessage,
                 HttpStatus.CREATED,
@@ -123,25 +137,25 @@ public class PengeluaranService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> saveUploadFilePengeluaran(List<Pengeluaran> listPengeluaran,
-                                                  MultipartFile multipartFile,
-                                                  WebRequest request) throws Exception {
-        List<Pengeluaran> listPengeluaranResult = null;
+    public Map<String, Object> saveUploadFilePesanan(List<Pesanan> listPesanan,
+                                                     MultipartFile multipartFile,
+                                                     WebRequest request) throws Exception {
+        List<Pesanan> listPesananResult = null;
         String strMessage = ConstantMessage.SUCCESS_SAVE;
 
         try {
-            listPengeluaranResult = pengeluaranRepo.saveAll(listPengeluaran);
-            if (listPengeluaranResult.size() == 0) {
-                strExceptionArr[1] = "saveUploadFilePengeluaran(List<Pengeluaran> listPengeluaran,MultipartFile multipartFile,WebRequest request) --- LINE 140";
+            listPesananResult = pesananRepo.saveAll(listPesanan);
+            if (listPesananResult.size() == 0) {
+                strExceptionArr[1] = "saveUploadFilePesanan(List<Pesanan> listPesanan, MultipartFile multipartFile, WebRequest request) --- LINE 129";
                 LoggingFile.exceptionStringz(strExceptionArr, new ResourceNotFoundException("FILE KOSONG"), OtherConfig.getFlagLogging());
                 return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_EMPTY_FILE + " -- " + multipartFile.getOriginalFilename(),
-                        HttpStatus.BAD_REQUEST, null, "FV11004", request);
+                        HttpStatus.BAD_REQUEST, null, "FV03004", request);
             }
         } catch (Exception e) {
-            strExceptionArr[1] = "saveUploadFilePengeluaran(List<Pengeluaran> listPengeluaran,MultipartFile multipartFile,WebRequest request) --- LINE 144";
+            strExceptionArr[1] = "saveUploadFilePesanan(List<Pesanan> listPesanan, MultipartFile multipartFile, WebRequest request) --- LINE 129";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
-                    HttpStatus.BAD_REQUEST, null, "FE11002", request);
+                    HttpStatus.BAD_REQUEST, null, "FE03002", request);
         }
         return new ResponseHandler().
                 generateModelAttribut(strMessage,
@@ -151,38 +165,38 @@ public class PengeluaranService {
                         request);
     }
 
-    public Map<String,Object> findAllPengeluaran(Pageable pageable, WebRequest request)
+    public Map<String,Object> findAllPesanan(Pageable pageable, WebRequest request)
     {
-        List<PengeluaranDTO> listPengeluaranDTO = null;
+        List<PesananDTO> listPesananDTO = null;
         Map<String,Object> mapResult = null;
-        Page<Pengeluaran> pagePengeluaran = null;
-        List<Pengeluaran> listPengeluaran = null;
+        Page<Pesanan> pagePesanan = null;
+        List<Pesanan> listPesanan = null;
 
         try
         {
-            pagePengeluaran = pengeluaranRepo.findByIsDelete(pageable,(byte)1);
-            listPengeluaran = pagePengeluaran.getContent();
-            if(listPengeluaran.size()==0)
+            pagePesanan = pesananRepo.findByIsDelete(pageable,(byte)1);
+            listPesanan = pagePesanan.getContent();
+            if(listPesanan.size()==0)
             {
                 return new ResponseHandler().
                         generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
                                 HttpStatus.OK,
                                 transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN
-                                "FV11005",
+                                "FV03005",
                                 request);
             }
-            listPengeluaranDTO = modelMapper.map(listPengeluaran, new TypeToken<List<PengeluaranDTO>>() {}.getType());
-            mapResult = transformToDTO.transformObject(objectMapper,listPengeluaranDTO,pagePengeluaran,mapColumnSearch);
+            listPesananDTO = modelMapper.map(listPesanan, new TypeToken<List<PesananDTO>>() {}.getType());
+            mapResult = transformToDTO.transformObject(objectMapper,listPesananDTO,pagePesanan,mapColumnSearch);
 
         }
         catch (Exception e)
         {
-            strExceptionArr[1] = "findAllPengeluaran(Pageable pageable, WebRequest request) --- LINE 183";
+            strExceptionArr[1] = "findAllPesanan(Pageable pageable, WebRequest request) --- LINE 157";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_INTERNAL_SERVER,
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN
-                    "FE11003", request);
+                    "FE03003", request);
         }
 
         return new ResponseHandler().
@@ -195,59 +209,63 @@ public class PengeluaranService {
 
     public Map<String,Object> findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst)
     {
-        Page<Pengeluaran> pagePengeluaran = null;
-        List<Pengeluaran> listPengeluaran = null;
-        List<PengeluaranDTO> listPengeluaranDTO = null;
+        Page<Pesanan> pagePesanan = null;
+        List<Pesanan> listPesanan = null;
+        List<PesananDTO> listPesananDTO = null;
         Map<String,Object> mapResult = null;
 
         try
         {
-            if(columFirst.equals("id"))
+            if(columFirst.equals("id") || columFirst.equals("harga") || columFirst.equals("berat") || columFirst.equals("total"))
             {
                 if(!valueFirst.equals("") && valueFirst!=null)
                 {
                     try
                     {
-                        Long.parseLong(valueFirst);
+                        if (columFirst.equals("id")){
+                            Long.parseLong(valueFirst);
+                        }
+                        else {
+                            Double.parseDouble(valueFirst);
+                        }
                     }
                     catch (Exception e)
                     {
-                        strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 218";
+                        strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 215";
                         LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
                         return new ResponseHandler().
                                 generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
                                         HttpStatus.OK,
                                         transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN
-                                        "FE11004",
+                                        "FE11005",
                                         request);
                     }
                 }
-
             }
-            pagePengeluaran = getDataByValue(pageable,columFirst,valueFirst);
-            listPengeluaran = pagePengeluaran.getContent();
-            if(listPengeluaran.size()==0)
+            pagePesanan = getDataByValue(pageable,columFirst,valueFirst);
+            listPesanan = pagePesanan.getContent();
+            if(listPesanan.size()==0)
             {
                 return new ResponseHandler().
                         generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
                                 HttpStatus.OK,
                                 transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),//HANDLE NILAI PENCARIAN EMPTY
-                                "FV11006",
+                                "FV03006",
                                 request);
             }
-            listPengeluaranDTO = modelMapper.map(listPengeluaran, new TypeToken<List<PengeluaranDTO>>() {}.getType());
-            mapResult = transformToDTO.transformObject(objectMapper,listPengeluaranDTO,pagePengeluaran,mapColumnSearch);
-            System.out.println("LIST DATA => "+listPengeluaranDTO.size());
+            listPesananDTO = modelMapper.map(listPesanan, new TypeToken<List<PesananDTO>>() {}.getType());
+            mapResult = transformToDTO.transformObject(objectMapper,listPesananDTO,pagePesanan,mapColumnSearch);
+            System.out.println("LIST DATA => "+listPesananDTO.size());
         }
 
         catch (Exception e)
         {
-            strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 248";
+            strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 199";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     transformToDTO.transformObjectDataEmpty(objectMapper,pageable,mapColumnSearch),
-                    "FE11005", request);
+                    "FE03005", request);
         }
         return new ResponseHandler().
                 generateModelAttribut(ConstantMessage.SUCCESS_FIND_BY,
@@ -259,88 +277,114 @@ public class PengeluaranService {
 
     public Map<String,Object> findById(Long id, WebRequest request)
     {
-        Pengeluaran pengeluaran = pengeluaranRepo.findById(id).orElseThrow (
+        Pesanan pesanan = pesananRepo.findById(id).orElseThrow (
                 ()-> null
         );
-        if(pengeluaran == null)
+        if(pesanan == null)
         {
-            return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_PENGELUARAN_NOT_EXISTS,
+            return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_PESANAN_NOT_EXISTS,
                     HttpStatus.NOT_ACCEPTABLE,
                     transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                    "FV11005",request);
+                    "FV03005",request);
         }
-        PengeluaranDTO pengeluaranDTO = modelMapper.map(pengeluaran, new TypeToken<PengeluaranDTO>(){}.getType());
+        PesananDTO pesananDTO = modelMapper.map(pesanan, new TypeToken<PesananDTO>() {}.getType());
         return new ResponseHandler().
                 generateModelAttribut(ConstantMessage.SUCCESS_FIND_BY,
                         HttpStatus.OK,
-                        pengeluaranDTO,
+                        pesananDTO,
                         null,
                         request);
     }
 
-    private void mapColumn()
+    public List<PesananDTO> getAllPesanan()//KHUSUS UNTUK FORM INPUT SAJA
     {
-        mapColumnSearch.put("id","ID PENGELUARAN");
-        mapColumnSearch.put("nama","NAMA PENGELUARAN");
-        mapColumnSearch.put("biaya","BIAYA PENGELUARAN");
+        List<PesananDTO> listPesananDTO = null;
+        Map<String,Object> mapResult = null;
+        List<Pesanan> listPesanan = null;
 
+        try
+        {
+            listPesanan = pesananRepo.findByIsDelete((byte)1);
+            if(listPesanan.size()==0)
+            {
+                return new ArrayList<PesananDTO>();
+            }
+            listPesananDTO = modelMapper.map(listPesanan, new TypeToken<List<PesananDTO>>() {}.getType());
+        }
+        catch (Exception e)
+        {
+            strExceptionArr[1] = "getAllPesanan() --- LINE 304";
+            LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+            return listPesananDTO;
+        }
+        return listPesananDTO;
     }
 
-    private Page<Pengeluaran> getDataByValue(Pageable pageable, String paramColumn, String paramValue)
-    {
-        if(paramValue.equals("") || paramValue==null)
-        {
-            return pengeluaranRepo.findByIsDelete(pageable,(byte) 1);
-        }
-        if(paramColumn.equals("id"))
-        {
-            return pengeluaranRepo.findByIsDeleteAndIdPengeluaranContainsIgnoreCase(pageable,(byte) 1,Long.parseLong(paramValue));
-        } else if (paramColumn.equals("nama")) {
-            return pengeluaranRepo.findByIsDeleteAndNamaPengeluaranContainsIgnoreCase(pageable,(byte) 1,paramValue);
-        } else if (paramColumn.equals("biaya")) {
-            return pengeluaranRepo.findByIsDeleteAndBiayaContainsIgnoreCase(pageable,(byte) 1,paramValue);
-        }
-
-        return pengeluaranRepo.findByIsDelete(pageable,(byte) 1);// ini default kalau parameter search nya tidak sesuai--- asumsi nya di hit bukan dari web
-    }
-
-    public Map<String, Object> deletePengeluaran(byte idPengeluaran,WebRequest request) {
-        String strMessage = ConstantMessage.SUCCESS_SAVE;
+    public Map<String, Object> deletePesanan(Long idPesanan, WebRequest request) {
+        String strMessage = ConstantMessage.SUCCESS_DELETE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
-        Pengeluaran nextPengeluaran = null;
+        Pesanan nextPesanan = null;
         try {
-            nextPengeluaran = pengeluaranRepo.findById((long) idPengeluaran).orElseThrow(
+            nextPesanan = pesananRepo.findById(idPesanan).orElseThrow(
                     ()->null
             );
 
-            if(nextPengeluaran==null)
+            if(nextPesanan==null)
             {
-                return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_PENGELUARAN_NOT_EXISTS,
+                return new ResponseHandler().generateModelAttribut(ConstantMessage.WARNING_DEMO_NOT_EXISTS,
                         HttpStatus.NOT_ACCEPTABLE,
                         transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                        "FV11002",request);
+                        "FV11008",request);
             }
             if(strUserIdz==null)
             {
                 return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                         HttpStatus.NOT_ACCEPTABLE,
                         null,
-                        "FV11003",request);
+                        "FV11009",request);
             }
-            nextPengeluaran.setIsDelete((byte)0);
-            nextPengeluaran.setModifiedBy((byte) Integer.parseInt(strUserIdz.toString()));
-            nextPengeluaran.setModifiedDate(new Date());
+            nextPesanan.setIsDelete((byte)0);
+            nextPesanan.setModifiedBy(Integer.parseInt(strUserIdz.toString()));
+            nextPesanan.setModifiedDate(new Date());
 
         } catch (Exception e) {
-            strExceptionArr[1] = " updatePengeluaran(Long idPengeluaran,Pengeluaran pengeluaran, WebRequest request) --- LINE 340";
+            strExceptionArr[1] = " deletePesanan(Long idPesanan, WebRequest request)  --- LINE 304";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST,
                     transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                    "FE11002", request);
+                    "FE11010", request);
         }
         return new ResponseHandler().generateModelAttribut(strMessage,
-                HttpStatus.CREATED,
+                HttpStatus.OK,
                 transformToDTO.transformObjectDataEmpty(objectMapper,mapColumnSearch),
-                null, request);    }
+                null, request);
+    }
+
+    private Page<Pesanan> getDataByValue(Pageable pageable, String paramColumn, String paramValue)
+    {
+        if(paramValue.equals(""))
+        {
+            return pesananRepo.findByIsDelete(pageable,(byte) 1);
+        }
+        if(paramColumn.equals("id")){
+            return pesananRepo.findByIsDeleteAndIdPesanan(pageable,(byte) 1,Long.parseLong(paramValue));
+        } else if(paramColumn.equals("nama")){
+            return pesananRepo.findByIsDeleteAndPelangganNamaLengkapContainsIgnoreCase(pageable,(byte) 1,paramValue);
+        } else if(paramColumn.equals("harga")){
+            return pesananRepo.findByIsDeleteAndPaketLayananHargaPerKilo(pageable,(byte) 1,Double.parseDouble(paramValue));
+        } else if(paramColumn.equals("total")){
+            return pesananRepo.findByIsDeleteAndTotalHarga(pageable,(byte) 1,Double.parseDouble(paramValue));
+        } else if(paramColumn.equals("berat")){
+            return pesananRepo.findByIsDeleteAndBerat(pageable,(byte) 1,Double.parseDouble(paramValue));
+        } else if(paramColumn.equals("layanan")){
+            return pesananRepo.findByIsDeleteAndPaketLayananNamaPaketContainsIgnoreCase(pageable,(byte) 1,paramValue);
+        } else if(paramColumn.equals("tipe")){
+            return pesananRepo.findByIsDeleteAndPaketLayananTipeLayananContainsIgnoreCase(pageable,(byte) 1,paramValue);
+        } else if(paramColumn.equals("cara")){
+            return pesananRepo.findByIsDeleteAndPembayaranNamaPembayaranContainsIgnoreCase(pageable,(byte) 1,paramValue);
+        }
+
+        return pesananRepo.findByIsDelete(pageable,(byte) 1);
+    }
 }

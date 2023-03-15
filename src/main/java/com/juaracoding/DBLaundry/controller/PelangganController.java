@@ -1,10 +1,18 @@
-package com.juaracoding.DBLaundry.controller;
+package com.juaracoding.DBLaundry.controller;/*
+Created By IntelliJ IDEA 2022.2.3 (Community Edition)
+IntelliJ IDEA 2022.3.2 (Community Edition)
+Build #IC-223.8617.56, built on January 26, 2023
+@Author USER a.k.a. Deby Utari
+Java Developer
+Created on 12/03/2023 16:08
+@Last Modified 12/03/2023 16:08
+Version 1.0
+*/
 
 import com.juaracoding.DBLaundry.configuration.OtherConfig;
-import com.juaracoding.DBLaundry.dto.MenuDTO;
-import com.juaracoding.DBLaundry.model.Menu;
-import com.juaracoding.DBLaundry.service.MenuHeaderService;
-import com.juaracoding.DBLaundry.service.MenuService;
+import com.juaracoding.DBLaundry.dto.PelangganDTO;
+import com.juaracoding.DBLaundry.model.Pelanggan;
+import com.juaracoding.DBLaundry.service.PelangganService;
 import com.juaracoding.DBLaundry.utils.ConstantMessage;
 import com.juaracoding.DBLaundry.utils.ManipulationMap;
 import com.juaracoding.DBLaundry.utils.MappingAttribute;
@@ -27,35 +35,35 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/api/usrmgmnt")
-public class MenuController {
+@RequestMapping("/api/mgmnt")
+public class PelangganController {
 
-    private MenuService menuService;
-
-    private MenuHeaderService menuHeaderService;
-
+    private PelangganService pelangganService;
     @Autowired
     private ModelMapper modelMapper;
-
     private Map<String,Object> objectMapper = new HashMap<String,Object>();
     private Map<String,String> mapSorting = new HashMap<String,String>();
-
-    private List<Menu> lsCPUpload = new ArrayList<Menu>();
-
+    private List<Pelanggan> lsCPUpload = new ArrayList<Pelanggan>();
     private String [] strExceptionArr = new String[2];
-
     private MappingAttribute mappingAttribute = new MappingAttribute();
 
     @Autowired
-    public MenuController(MenuService menuService, MenuHeaderService menuHeaderService) {
-        strExceptionArr[0] = "MenuController";
+    public PelangganController(PelangganService pelangganService) {
+        strExceptionArr[0] = "PelangganController";
         mapSorting();
-        this.menuService = menuService;
-        this.menuHeaderService = menuHeaderService;
+        this.pelangganService = pelangganService;
     }
 
-    @GetMapping("/v1/menu/new")
-    public String createMenu(Model model,WebRequest request)
+    private void mapSorting()
+    {
+        mapSorting.put("id","ID PELANGGAN");
+        mapSorting.put("nama","NAMA PELANGGAN");
+        mapSorting.put("alamat","ALAMAT LENGKAP");
+        mapSorting.put("no","NO HANDPHONE");
+    }
+
+    @GetMapping("/v1/pelanggan/new" )
+    public String createPelanggan(Model model, WebRequest request)
     {
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
@@ -64,13 +72,12 @@ public class MenuController {
                 return "redirect:/api/check/logout";
             }
         }
-        model.addAttribute("menu", new MenuDTO());
-        model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());//untuk parent nya
-        return "menu/create_menu";
+        model.addAttribute("pelanggan", new PelangganDTO());
+        return "pelanggan/create_pelanggan";
     }
 
-    @GetMapping("/v1/menu/edit/{id}")
-    public String editMenu(Model model,WebRequest request,@PathVariable("id") Long id)
+    @GetMapping("/v1/pelanggan/edit/{id}")
+    public String editPelanggan(Model model, WebRequest request, @PathVariable("id") Long id)
     {
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
@@ -79,27 +86,24 @@ public class MenuController {
                 return "redirect:/api/check/logout";
             }
         }
-        objectMapper = menuService.findById(id,request);
-        MenuDTO menuDTO = (objectMapper.get("data")==null?null:(MenuDTO) objectMapper.get("data"));
+        objectMapper = pelangganService.findById(id,request);
+        PelangganDTO pelangganDTO = (objectMapper.get("data")==null?null:(PelangganDTO) objectMapper.get("data"));
         if((Boolean) objectMapper.get("success"))
         {
-            MenuDTO menuDTOForSelect = (MenuDTO) objectMapper.get("data");
-            model.addAttribute("menu", menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
-//            System.out.println("selectedValues -> "+menuDTOForSelect.getMenuHeader().getIdMenuHeader());
-            model.addAttribute("selectedValues", menuDTOForSelect.getMenuHeader().getIdMenuHeader());
-            return "menu/edit_menu";
-
+            PelangganDTO pelangganDTOForSelect = (PelangganDTO) objectMapper.get("data");
+            model.addAttribute("pelanggan", pelangganDTO);
+            return "pelanggan/edit_pelanggan";
         }
         else
         {
-            model.addAttribute("menu", new MenuDTO());
-            return "redirect:/api/usrmgmnt/v1/menu/default";
+            model.addAttribute("pelanggan", new PelangganDTO());
+            return "redirect:/api/mgmnt/v1/pelanggan/default";
         }
     }
-    @PostMapping("/v1/menu/new")
-    public String newMenu(@ModelAttribute(value = "menu")
-                          @Valid MenuDTO menuDTO
+
+    @PostMapping("/v1/pelanggan/new")
+    public String newPelanggan(@ModelAttribute(value = "pelanggan")
+                            @Valid PelangganDTO pelangganDTO
             , BindingResult bindingResult
             , Model model
             , WebRequest request
@@ -116,37 +120,22 @@ public class MenuController {
         /* START VALIDATION */
         if(bindingResult.hasErrors())
         {
-            model.addAttribute("menu",menuDTO);
+            model.addAttribute("pelanggan",pelangganDTO);
             model.addAttribute("status","error");
-            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
 
-            return "menu/create_menu";
+            return "pelanggan/create_pelanggan";
         }
         Boolean isValid = true;
-        /*
-            NANTI DIBUATKAN REGEX UNTUK VALIDASI FORMAT PATH DAN ENDPOINT
-         */
-        if(!menuDTO.getPathMenu().startsWith("/api/"))
-        {
-            isValid = false;
-            mappingAttribute.setErrorMessage(bindingResult, ConstantMessage.WARNING_MENU_PATH_INVALID);
-        }
-        if(!menuDTO.getEndPoint().equals(OtherConfig.getUrlEndPointVerify()))
-        {
-            isValid = false;
-            mappingAttribute.setErrorMessage(bindingResult, ConstantMessage.WARNING_MENU_END_POINTS_INVALID);
-        }
 
         if(!isValid)
         {
-            model.addAttribute("menu",menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
-            return "menu/create_menu";
+            model.addAttribute("pelanggan",pelangganDTO);
+            return "pelanggan/create_pelanggan";
         }
         /* END OF VALIDATION */
 
-        Menu menu = modelMapper.map(menuDTO, new TypeToken<Menu>() {}.getType());
-        objectMapper = menuService.saveMenu(menu,request);
+        Pelanggan pelanggan = modelMapper.map(pelangganDTO, new TypeToken<Pelanggan>() {}.getType());
+        objectMapper = pelangganService.savePelanggan(pelanggan,request);
         if(objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
             return "redirect:/api/check/logout";
@@ -157,22 +146,20 @@ public class MenuController {
             mappingAttribute.setAttribute(model,objectMapper);
             model.addAttribute("message","DATA BERHASIL DISIMPAN");
             Long idDataSave = objectMapper.get("idDataSave")==null?1:Long.parseLong(objectMapper.get("idDataSave").toString());
-//            return "redirect:/api/usrmgmnt/v1/menu/default";
-            return "redirect:/api/usrmgmnt/v1/menu/fbpsb/0/asc/idMenu?columnFirst=idMenu&valueFirst="+idDataSave+"&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
+            return "redirect:/api/mgmnt/v1/pelanggan/fbpsb/0/asc/idpelanggan?columnFirst=id&valueFirst="+idDataSave+"&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         }
         else
         {
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
-            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
-            model.addAttribute("menu",new MenuDTO());
+            model.addAttribute("pelanggan",new PelangganDTO());
             model.addAttribute("status","error");
-            return "menu/create_menu";
+            return "pelanggan/create_pelanggan";
         }
     }
 
-    @PostMapping("/v1/menu/edit/{id}")
-    public String editMenu(@ModelAttribute("menu")
-                           @Valid MenuDTO menuDTO
+    @PostMapping("/v1/pelanggan/edit/{id}")
+    public String editPelanggan(@ModelAttribute("pelanggan")
+                             @Valid PelangganDTO pelangganDTO
             , BindingResult bindingResult
             , Model model
             , WebRequest request
@@ -182,35 +169,20 @@ public class MenuController {
         /* START VALIDATION */
         if(bindingResult.hasErrors())
         {
-            model.addAttribute("menu",menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
-            return "menu/edit_menu";
+            model.addAttribute("pelanggan",pelangganDTO);
+            return "pelanggan/edit_pelanggan";
         }
         Boolean isValid = true;
-        /*
-            NANTI DIBUATKAN REGEX UNTUK VALIDASI FORMAT PATH DAN ENDPOINT
-         */
-        if(!menuDTO.getPathMenu().startsWith("/api/"))
-        {
-            isValid = false;
-            mappingAttribute.setErrorMessage(bindingResult, ConstantMessage.WARNING_MENU_PATH_INVALID);
-        }
-        if(!menuDTO.getEndPoint().equals(OtherConfig.getUrlEndPointVerify()))
-        {
-            isValid = false;
-            mappingAttribute.setErrorMessage(bindingResult, ConstantMessage.WARNING_MENU_END_POINTS_INVALID);
-        }
 
         if(!isValid)
         {
-            model.addAttribute("menu",menuDTO);
-            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
-            return "menu/edit_menu";
+            model.addAttribute("pelanggan",pelangganDTO);
+            return "pelanggan/edit_pelanggan";
         }
         /* END OF VALIDATION */
 
-        Menu menu = modelMapper.map(menuDTO, new TypeToken<Menu>() {}.getType());
-        objectMapper = menuService.updateMenu(id,menu,request);
+        Pelanggan pelanggan = modelMapper.map(pelangganDTO, new TypeToken<Pelanggan>() {}.getType());
+        objectMapper = pelangganService.updatePelanggan(id,pelanggan,request);
         if(objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
             return "redirect:/api/check/logout";
@@ -219,20 +191,18 @@ public class MenuController {
         if((Boolean) objectMapper.get("success"))
         {
             mappingAttribute.setAttribute(model,objectMapper);
-            model.addAttribute("menu",new MenuDTO());
-            return "redirect:/api/usrmgmnt/v1/menu/fbpsb/0/asc/idMenu?columnFirst=idMenu&valueFirst="+id+"&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
+            model.addAttribute("pelanggan",new PelangganDTO());
+            return "redirect:/api/mgmnt/v1/pelanggan/fbpsb/0/asc/idPelanggan?columnFirst=id&valueFirst="+id+"&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         }
         else
         {
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
-            model.addAttribute("menu",new MenuDTO());
-            model.addAttribute("listMenuHeader", menuHeaderService.getAllMenuHeader());
-            return "menu/edit_menu";
+            model.addAttribute("pelanggan",new PelangganDTO());
+            return "pelanggan/edit_pelanggan";
         }
     }
 
-
-    @GetMapping("/v1/menu/default")
+    @GetMapping("/v1/pelanggan/default")
     public String getDefaultData(Model model,WebRequest request)
     {
         if(OtherConfig.getFlagSessionValidation().equals("y"))
@@ -242,22 +212,22 @@ public class MenuController {
                 return "redirect:/api/check/logout";
             }
         }
-        Pageable pageable = PageRequest.of(0,5, Sort.by("idMenu"));
-        objectMapper = menuService.findAllMenu(pageable,request);
+        Pageable pageable = PageRequest.of(0,5, Sort.by("idPelanggan"));
+        objectMapper = pelangganService.findAllPelanggan(pageable,request);
         mappingAttribute.setAttribute(model,objectMapper,request);
 
-        model.addAttribute("menu",new MenuDTO());
-        model.addAttribute("sortBy","idMenu");
+        model.addAttribute("pelanggan",new PelangganDTO());
+        model.addAttribute("sortBy","idPelanggan");
         model.addAttribute("currentPage",1);
         model.addAttribute("asc","asc");
         model.addAttribute("columnFirst","");
         model.addAttribute("valueFirst","");
         model.addAttribute("sizeComponent",5);
-        return "/menu/menu";
+        return "/pelanggan/pelanggan";
     }
 
-    @GetMapping("/v1/menu/fbpsb/{page}/{sort}/{sortby}")
-    public String findBYMenu(
+    @GetMapping("/v1/pelanggan/fbpsb/{page}/{sort}/{sortby}")
+    public String findByPelanggan(
             Model model,
             @PathVariable("page") Integer pagez,
             @PathVariable("sort") String sortz,
@@ -268,26 +238,33 @@ public class MenuController {
             WebRequest request
     ){
         sortzBy = mapSorting.get(sortzBy);
-        sortzBy = sortzBy==null?"idMenu":sortzBy;
+        sortzBy = sortzBy==null?"idPelanggan":sortzBy;
         Pageable pageable = PageRequest.of(pagez==0?pagez:pagez-1,Integer.parseInt(sizeComponent.equals("")?"5":sizeComponent), sortz.equals("asc")?Sort.by(sortzBy):Sort.by(sortzBy).descending());
-        objectMapper = menuService.findByPage(pageable,request,columnFirst,valueFirst);
+        objectMapper = pelangganService.findByPage(pageable,request,columnFirst,valueFirst);
         mappingAttribute.setAttribute(model,objectMapper,request);
-        model.addAttribute("menu",new MenuDTO());
+        model.addAttribute("pelanggan",new PelangganDTO());
         model.addAttribute("currentPage",pagez==0?1:pagez);
         model.addAttribute("sortBy", ManipulationMap.getKeyFromValue(mapSorting,sortzBy));
         model.addAttribute("columnFirst",columnFirst);
         model.addAttribute("valueFirst",valueFirst);
         model.addAttribute("sizeComponent",sizeComponent);
 
-        return "/menu/menu";
+        return "/pelanggan/pelanggan";
     }
 
-    private void mapSorting()
+    @GetMapping("/v1/pelanggan/delete/{id}")
+    public String deletePelanggan(Model model, WebRequest request, @PathVariable("id") Long id)
     {
-        mapSorting.put("id","idMenu");
-        mapSorting.put("nama","namaMenu");
-        mapSorting.put("path","pathMenu");
-        mapSorting.put("endPoint","endPoint");
+        if(OtherConfig.getFlagSessionValidation().equals("y"))
+        {
+            mappingAttribute.setAttribute(model,request);//untuk set session
+            if(request.getAttribute("USR_ID",1)==null){
+                return "redirect:/api/check/logout";
+            }
+        }
+        objectMapper = pelangganService.deletePelanggan(id,request);
+        mappingAttribute.setAttribute(model,objectMapper);//untuk set session
+        model.addAttribute("pelanggan", new PelangganDTO());
+        return "redirect:/api/mgmnt/v1/pelanggan/default";
     }
-
 }

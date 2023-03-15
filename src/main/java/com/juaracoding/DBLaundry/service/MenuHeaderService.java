@@ -67,7 +67,7 @@ public class MenuHeaderService {
             menuHeader.setCreatedDate(new Date());
             menuHeaderRepo.save(menuHeader);
         } catch (Exception e) {
-            strExceptionArr[1] = "saveMenuHeader(MenuHeader menuHeader, WebRequest request) --- LINE 58";
+            strExceptionArr[1] = "saveMenuHeader(MenuHeader menuHeader, WebRequest request) --- LINE 54";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST, null, "FE02001", request);
@@ -101,7 +101,7 @@ public class MenuHeaderService {
             nextMenuHeader.setModifiedDate(new Date());
 
         } catch (Exception e) {
-            strExceptionArr[1] = "updateMenu(Long idMenuHeader,MenuHeader menuHeader, WebRequest request)  --- LINE 91";
+            strExceptionArr[1] = "updateMenu(Long idMenuHeader,MenuHeader menuHeader, WebRequest request)  --- LINE 79";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_UPDATE_FAILED,
                     HttpStatus.BAD_REQUEST, null, "FE02002", request);
@@ -135,7 +135,7 @@ public class MenuHeaderService {
         }
         catch (Exception e)
         {
-            strExceptionArr[1] = "findAllMenu(Pageable pageable, WebRequest request) --- LINE 121";
+            strExceptionArr[1] = "findAllMenu(Pageable pageable, WebRequest request) --- LINE 113";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_INTERNAL_SERVER,
                     HttpStatus.INTERNAL_SERVER_ERROR, null, "FE03003", request);
@@ -176,7 +176,7 @@ public class MenuHeaderService {
         }
         catch (Exception e)
         {
-            strExceptionArr[1] = "findAllMenuHeader(Pageable pageable, WebRequest request) --- LINE 177";
+            strExceptionArr[1] = "findAllMenuHeader(Pageable pageable, WebRequest request) --- LINE 154";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_INTERNAL_SERVER,
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -213,7 +213,7 @@ public class MenuHeaderService {
                     }
                     catch (Exception e)
                     {
-                        strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 212";
+                        strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 197";
                         LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
                         return new ResponseHandler().
                                 generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
@@ -241,7 +241,7 @@ public class MenuHeaderService {
 
         catch (Exception e)
         {
-            strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 243";
+            strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 197";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -367,7 +367,7 @@ public class MenuHeaderService {
             nextMenuHeader.setModifiedDate(new Date());
 
         } catch (Exception e) {
-            strExceptionArr[1] = " deleteMenuHeader(Long idDemo, WebRequest request) --- LINE 344";
+            strExceptionArr[1] = " deleteMenuHeader(Long idDemo, WebRequest request) --- LINE 342";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST,

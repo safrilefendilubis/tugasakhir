@@ -92,7 +92,7 @@ public class UserService {
             System.out.println("VERIFIKASI -> "+intVerification);
         }catch (Exception e)
         {
-            strExceptionArr[1]="checkRegis(Userz userz) --- LINE 70";
+            strExceptionArr[1]="checkRegis(Userz userz) --- LINE 39";
             LoggingFile.exceptionStringz(strExceptionArr,e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.NOT_FOUND,null,"FE01001",request);
@@ -127,7 +127,7 @@ public class UserService {
         }
         catch (Exception e)
         {
-            strExceptionArr[1]="confirmRegis(Userz userz)  --- LINE 103";
+            strExceptionArr[1]="confirmRegis(Userz userz)  --- LINE 105";
             LoggingFile.exceptionStringz(strExceptionArr,e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.INTERNAL_SERVER_ERROR,null,"FE01002",request);
@@ -165,7 +165,7 @@ public class UserService {
 
         catch (Exception e)
         {
-            strExceptionArr[1]="doLogin(Userz userz,WebRequest request)  --- LINE 132";
+            strExceptionArr[1]="doLogin(Userz userz,WebRequest request)  --- LINE 140";
             LoggingFile.exceptionStringz(strExceptionArr,e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_LOGIN_FAILED,
                     HttpStatus.INTERNAL_SERVER_ERROR,null,"FE01003",request);
@@ -199,7 +199,7 @@ public class UserService {
         }
         catch (Exception e)
         {
-            strExceptionArr[1]="getNewToken(String emailz, WebRequest request)  --- LINE 185";
+            strExceptionArr[1]="getNewToken(String emailz, WebRequest request)  --- LINE 178";
             LoggingFile.exceptionStringz(strExceptionArr,e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.INTERNAL_SERVER_ERROR,null,"FE01004",request);
@@ -240,7 +240,7 @@ public class UserService {
         }
         catch (Exception e)
         {
-            strExceptionArr[1]="sendMailForgetPwd(String email)  --- LINE 214";
+            strExceptionArr[1]="sendMailForgetPwd(String email)  --- LINE 223";
             LoggingFile.exceptionStringz(strExceptionArr,e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.INTERNAL_SERVER_ERROR,null,"FE01005",request);
@@ -283,7 +283,7 @@ public class UserService {
         }
         catch (Exception e)
         {
-            strExceptionArr[1]="confirmTokenForgotPwd(ForgetPasswordDTO forgetPasswordDTO, WebRequest request)  --- LINE 250";
+            strExceptionArr[1]="confirmTokenForgotPwd(ForgetPasswordDTO forgetPasswordDTO, WebRequest request)  --- LINE 262";
             LoggingFile.exceptionStringz(strExceptionArr,e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.INTERNAL_SERVER_ERROR,null,"FE01006",request);

@@ -69,7 +69,7 @@ public class MenuService{
             menu.setCreatedDate(new Date());
             menuRepo.save(menu);
         } catch (Exception e) {
-            strExceptionArr[1] = "saveMenu(Menu menu, WebRequest request) --- LINE 67";
+            strExceptionArr[1] = "saveMenu(Menu menu, WebRequest request) --- LINE 58";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST,
@@ -113,7 +113,7 @@ public class MenuService{
             nextMenu.setModifiedDate(new Date());
 
         } catch (Exception e) {
-            strExceptionArr[1] = "updateMenu(Long idMenu,Menu menu, WebRequest request) --- LINE 92";
+            strExceptionArr[1] = "updateMenu(Long idMenu,Menu menu, WebRequest request) --- LINE 85";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST,
@@ -138,13 +138,13 @@ public class MenuService{
         try {
             listMenuResult = menuRepo.saveAll(listMenu);
             if (listMenuResult.size() == 0) {
-                strExceptionArr[1] = "saveUploadFile(List<Menu> listMenu, MultipartFile multipartFile, WebRequest request) --- LINE 82";
+                strExceptionArr[1] = "saveUploadFile(List<Menu> listMenu, MultipartFile multipartFile, WebRequest request) --- LINE 132";
                 LoggingFile.exceptionStringz(strExceptionArr, new ResourceNotFoundException("FILE KOSONG"), OtherConfig.getFlagLogging());
                 return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_EMPTY_FILE + " -- " + multipartFile.getOriginalFilename(),
                         HttpStatus.BAD_REQUEST, null, "FV03004", request);
             }
         } catch (Exception e) {
-            strExceptionArr[1] = "saveUploadFile(List<Menu> listMenu, MultipartFile multipartFile, WebRequest request) --- LINE 88";
+            strExceptionArr[1] = "saveUploadFile(List<Menu> listMenu, MultipartFile multipartFile, WebRequest request) --- LINE 132";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_SAVE_FAILED,
                     HttpStatus.BAD_REQUEST, null, "FE03002", request);
@@ -183,7 +183,7 @@ public class MenuService{
         }
         catch (Exception e)
         {
-            strExceptionArr[1] = "findAllMenu(Pageable pageable, WebRequest request) --- LINE 178";
+            strExceptionArr[1] = "findAllMenu(Pageable pageable, WebRequest request) --- LINE 160";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_INTERNAL_SERVER,
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -216,7 +216,7 @@ public class MenuService{
                 }
                 catch (Exception e)
                 {
-                    strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 209";
+                    strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 202";
                     LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
                     return new ResponseHandler().
                             generateModelAttribut(ConstantMessage.WARNING_DATA_EMPTY,
@@ -244,7 +244,7 @@ public class MenuService{
 
         catch (Exception e)
         {
-            strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 237";
+            strExceptionArr[1] = "findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst) --- LINE 202";
             LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
             return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                     HttpStatus.INTERNAL_SERVER_ERROR,

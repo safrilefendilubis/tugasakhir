@@ -38,17 +38,12 @@ import java.util.Map;
 public class PengeluaranController {
 
     private PengeluaranService pengeluaranService;
-
     @Autowired
     private ModelMapper modelMapper;
-
     private Map<String, Object> objectMapper = new HashMap<String, Object>();
     private Map<String, String> mapSorting = new HashMap<String, String>();
-
     private List<Pengeluaran> lsCPUpload = new ArrayList<Pengeluaran>();
-
     private String[] strExceptionArr = new String[2];
-
     private MappingAttribute mappingAttribute = new MappingAttribute();
 
     @Autowired
@@ -59,9 +54,9 @@ public class PengeluaranController {
     }
 
     private void mapSorting() {
-        mapSorting.put("id", "idPengeluaran");
-        mapSorting.put("nama", "namaPengeluaran");
-        mapSorting.put("biaya", "biaya");
+        mapSorting.put("id", "ID PENGELUARAN");
+        mapSorting.put("nama", "NAMA PENGELUARAN");
+        mapSorting.put("biaya", "BIAYA");
     }
 
     @GetMapping("/v1/pengeluaran/new")
@@ -192,7 +187,6 @@ public class PengeluaranController {
             return "pengeluaran/edit_pengeluaran";
         }
     }
-
 
     @GetMapping("/v1/pengeluaran/default")
     public String getDefaultData(Model model, WebRequest request) {

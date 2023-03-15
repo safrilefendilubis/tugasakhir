@@ -1,6 +1,7 @@
 package com.juaracoding.DBLaundry.controller;
 
 import cn.apiclub.captcha.Captcha;
+import com.juaracoding.DBLaundry.model.Pelanggan;
 import com.juaracoding.DBLaundry.model.Userz;
 import com.juaracoding.DBLaundry.utils.CaptchaUtils;
 import com.juaracoding.DBLaundry.utils.MappingAttribute;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
