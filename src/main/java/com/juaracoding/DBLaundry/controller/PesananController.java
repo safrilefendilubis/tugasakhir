@@ -11,6 +11,7 @@ Version 1.1
 import com.juaracoding.DBLaundry.configuration.OtherConfig;
 import com.juaracoding.DBLaundry.dto.PesananDTO;
 import com.juaracoding.DBLaundry.model.Pesanan;
+import com.juaracoding.DBLaundry.repo.PesananRepo;
 import com.juaracoding.DBLaundry.service.PaketLayananService;
 import com.juaracoding.DBLaundry.service.PelangganService;
 import com.juaracoding.DBLaundry.service.PembayaranService;
@@ -38,6 +39,8 @@ import java.util.Map;
 @RequestMapping("/api/mgmnt")
 public class PesananController {
 
+    @Autowired
+    private PesananRepo pesananRepo;
     private PesananService pesananService;
     private PaketLayananService paketLayananService;
     private PelangganService pelangganService;
@@ -220,6 +223,19 @@ public class PesananController {
         Pageable pageable = PageRequest.of(0,5, Sort.by("idPesanan"));
         objectMapper = pesananService.findAllPesanan(pageable,request);
         mappingAttribute.setAttribute(model,objectMapper,request);
+
+//        Double douReport = pesananRepo.calculationCurrentMonthReport();
+//        Integer douReport = (int) pesananRepo.calculationCurrentMonthReport();
+//        String strWarna = "";
+//        if(douReport<1000000)
+//        {
+//            strWarna = "red";
+//        }
+//        else {
+//            strWarna = "green";
+//        }
+//        model.addAttribute("currentProfit", "UNTUNG BULAN BERJALAN Rp."+String.valueOf(douReport));
+//        model.addAttribute("warnaProfit", strWarna);
 
         model.addAttribute("pesanan",new PesananDTO());
         model.addAttribute("sortBy","idPesanan");

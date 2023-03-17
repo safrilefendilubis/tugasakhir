@@ -4,6 +4,7 @@ import com.juaracoding.DBLaundry.model.Pesanan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -19,5 +20,16 @@ public interface PesananRepo extends JpaRepository<Pesanan,Long> {
     Page<Pesanan> findByIsDeleteAndPaketLayananTipeLayananContainsIgnoreCase(Pageable page , byte byteIsDelete, String values);
     Page<Pesanan> findByIsDeleteAndPembayaranNamaPembayaranContainsIgnoreCase(Pageable page , byte byteIsDelete, String values);
 
+//    @Query("SELECT SUM(a.berat * d.hargaPerKilo) FROM Pesanan a " +
+//            "JOIN a.pelanggan b " +
+//            "JOIN a.pembayaran c " +
+//            "JOIN a.paketLayanan d  WHERE DATENAME(month, GETDATE()) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
+//    double calculationCurrentMonthReport();
+//
+//    @Query("SELECT SUM(a.berat * d.hargaPerKilo) FROM Pesanan a " +
+//            "JOIN a.pelanggan b " +
+//            "JOIN a.pembayaran c " +
+//            "JOIN a.paketLayanan d  WHERE DATENAME(month, DATEADD(month,:numbr,GETDATE())) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
+//    Double calculationDynamicReport(Double numbr);
 }
 

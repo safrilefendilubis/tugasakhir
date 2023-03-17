@@ -4,6 +4,7 @@ import com.juaracoding.DBLaundry.dto.ForgetPasswordDTO;
 import com.juaracoding.DBLaundry.dto.UserDTO;
 import com.juaracoding.DBLaundry.handler.FormatValidation;
 import com.juaracoding.DBLaundry.model.Userz;
+import com.juaracoding.DBLaundry.repo.PesananRepo;
 import com.juaracoding.DBLaundry.service.UserService;
 import com.juaracoding.DBLaundry.utils.ConstantMessage;
 import com.juaracoding.DBLaundry.utils.GenerateMenuString;
@@ -28,6 +29,8 @@ import java.util.Map;
 @RequestMapping("/api/authz")
 public class UserController {
 
+    @Autowired
+    private PesananRepo pesananRepo;
     private UserService userService;
 
     @Autowired
@@ -231,6 +234,9 @@ public class UserController {
             request.setAttribute("NO_HP",nextUser.getNoHP(),1);//cara ambil request.getAttribute("NO_HP",1)
             request.setAttribute("USR_NAME",nextUser.getUsername(),1);//cara ambil request.getAttribute("USR_NAME",1)
             request.setAttribute("HTML_MENU", new GenerateMenuString().menuInnerHtml(nextUser.getAkses()),1);//cara ambil request.getAttribute("USR_NAME",1)
+            request.setAttribute("UNM", nextUser.getUsername(),1);
+//            Integer douReport = (int) pesananRepo.calculationCurrentMonthReport();
+//            model.addAttribute("currentProfit", "Rp."+String.valueOf(douReport));
             mappingAttribute.setAttribute(model,objectMapper,request);//urutan nya ini terakhir
             return "index_1";
         }

@@ -3,8 +3,10 @@ package com.juaracoding.DBLaundry.controller;
 import cn.apiclub.captcha.Captcha;
 import com.juaracoding.DBLaundry.model.Pelanggan;
 import com.juaracoding.DBLaundry.model.Userz;
+import com.juaracoding.DBLaundry.repo.PesananRepo;
 import com.juaracoding.DBLaundry.utils.CaptchaUtils;
 import com.juaracoding.DBLaundry.utils.MappingAttribute;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import java.util.Map;
 @RequestMapping("/")
 public class MainController {
 
+    @Autowired
+    private PesananRepo pesananRepo;
     private MappingAttribute mappingAttribute = new MappingAttribute();
     private Map<String,Object> objectMapper = new HashMap<String,Object>();
 
@@ -35,7 +39,10 @@ public class MainController {
         model.addAttribute("usr",users);
         if(request.getAttribute("USR_ID",1)!=null)
         {
+            Integer douReport = (int) pesananRepo.calculationCurrentMonthReport();
+            model.addAttribute("currentProfit", "Rp."+String.valueOf(douReport));
             mappingAttribute.setAttribute(model,objectMapper,request);
+
             return "index_1";
         }
         return "authz_signin";

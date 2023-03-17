@@ -34,6 +34,7 @@ public class MappingAttribute {
         model.addAttribute("timestamp", new Date());
         model.addAttribute("success",mapz.get("success"));
         model.addAttribute("USR_IDZ",request.getAttribute("USR_ID",1));//panggil di html dengan nama ${USR_IDZ}
+        model.addAttribute("UNMZ",request.getAttribute("UNM",1));//panggil di html dengan nama ${USR_IDZ}
         model.addAttribute("NO_HPZ",request.getAttribute("NO_HP",1));//panggil di web dengan nama ${NO_HPZ}
         model.addAttribute("EMAILZ",request.getAttribute("EMAIL",1));//panggil di web dengan nama ${EMAILZ}
         model.addAttribute("USR_NAMEZ",request.getAttribute("USR_NAME",1));//panggil di web dengan nama ${USR_NAMEZ}
@@ -52,6 +53,8 @@ public class MappingAttribute {
         model.addAttribute("EMAILZ",request.getAttribute("EMAIL",1));//panggil di web dengan nama ${EMAILZ}
         model.addAttribute("USR_NAMEZ",request.getAttribute("USR_NAME",1));//panggil di web dengan nama ${USR_NAMEZ}
         model.addAttribute("HTML_MENUZ",request.getAttribute("HTML_MENU",1));//panggil di web dengan nama ${HTML_MENUZ}<07 03 2023>
+        model.addAttribute("UNMZ",request.getAttribute("UNM",1));//panggil di html dengan nama ${USR_IDZ}
+
     }
 
     public BindingResult setErrorMessage(BindingResult br, String  strErrorMessage)
