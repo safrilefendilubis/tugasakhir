@@ -202,13 +202,17 @@ public class PengeluaranService {
 
         try
         {
-            if(columFirst.equals("id"))
+            if(columFirst.equals("id") || columFirst.equals("biaya"))
             {
                 if(!valueFirst.equals("") && valueFirst!=null)
                 {
                     try
                     {
-                        Long.parseLong(valueFirst);
+                        if (columFirst.equals("id")){
+                            Long.parseLong(valueFirst);
+                        } else {
+                            Double.parseDouble(valueFirst);
+                        }
                     }
                     catch (Exception e)
                     {

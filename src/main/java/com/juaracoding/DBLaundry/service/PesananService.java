@@ -55,14 +55,14 @@ public class PesananService {
 
     private void mapColumn()
     {
-        mapColumnSearch.put("id","idPesanan");
-        mapColumnSearch.put("nama","namaLengkap");
-        mapColumnSearch.put("layanan","namaPaket");
-        mapColumnSearch.put("tipe","tipeLayanan");
-        mapColumnSearch.put("berat","berat");
-        mapColumnSearch.put("harga","hargaPerKilo");
-        mapColumnSearch.put("total","totalHarga");
-        mapColumnSearch.put("cara","namaPembayaran");
+        mapColumnSearch.put("id","ID PESANAN");
+        mapColumnSearch.put("nama","NAMA LENGKAP");
+        mapColumnSearch.put("layanan","NAMA PAKET");
+        mapColumnSearch.put("tipe","TIPE LAYANAN");
+        mapColumnSearch.put("berat","BERAT");
+        mapColumnSearch.put("harga","HARGA PER KILO");
+        mapColumnSearch.put("total","TOTAL HARGA");
+        mapColumnSearch.put("cara","CARA BAYAR");
     }
 
     public Map<String, Object> savePesanan(Pesanan pesanan, WebRequest request) {

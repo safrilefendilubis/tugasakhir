@@ -214,7 +214,11 @@ public class PaketLayananService {
                 {
                     try
                     {
-                        Long.parseLong(valueFirst);
+                        if (columFirst.equals("id")){
+                            Long.parseLong(valueFirst);
+                        } else {
+                            Double.parseDouble(valueFirst);
+                        }
                     }
                     catch (Exception e)
                     {

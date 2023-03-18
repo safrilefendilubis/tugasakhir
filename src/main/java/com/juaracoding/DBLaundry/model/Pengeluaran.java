@@ -28,7 +28,7 @@ public class Pengeluaran {
     private String namaPengeluaran;
 
     @Column(name = "Biaya")
-    private String biaya;
+    private Double biaya;
 
     /*
      * Start Audit Trails
