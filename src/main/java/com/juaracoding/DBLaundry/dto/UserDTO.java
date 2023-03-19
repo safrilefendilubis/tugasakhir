@@ -10,31 +10,36 @@ import java.time.LocalDate;
 
 public class UserDTO {
 
-
+    //variabel untuk menampung email
     @NotEmpty(message = ConstantMessage.ERROR_EMAIL_IS_EMPTY)
     @Length(message = ConstantMessage.ERROR_EMAIL_MAX_MIN_LENGTH ,min = 15,max = 50)
     @NotNull(message = ConstantMessage.ERROR_EMAIL_IS_NULL)
     private String email;
 
+    //variabel untuk menampung user name
     @NotEmpty(message = ConstantMessage.ERROR_USRNAME_IS_EMPTY)
     @Length(message = ConstantMessage.ERROR_USRNAME_MAX_MIN_LENGTH ,min = 10,max = 30)
     @NotNull(message = ConstantMessage.ERROR_USRNAME_IS_NULL)
     private String username;
 
+    //variabel untuk menampung password
     @NotEmpty(message = ConstantMessage.ERROR_PASSWORD_IS_EMPTY)
     @Length(message = ConstantMessage.ERROR_PASSWORD_MAX_MIN_LENGTH ,min = 8,max = 25)
     @NotNull(message = ConstantMessage.ERROR_PASSWORD_IS_NULL)
     private String password;
 
 
+    //variabel untuk menampung nama lengkap
     @NotEmpty(message = ConstantMessage.ERROR_NAMALENGKAP_IS_EMPTY)
     @Length(message = ConstantMessage.ERROR_NAMALENGKAP_MAX_MIN_LENGTH ,min = 8,max = 40)
     @NotNull(message = ConstantMessage.ERROR_NAMALENGKAP_IS_NULL)
     private String namaLengkap;
 
+    //variabel untuk menampung tanggal lahir
     @DateTimeFormat(pattern = "yyyy-MM-dd")//masih miss validasi nya
     private LocalDate tanggalLahir;
 
+    //variabel untuk menampung no HP
     @NotEmpty(message = ConstantMessage.ERROR_NOHP_IS_EMPTY)
     @NotNull(message = ConstantMessage.ERROR_NOHP_IS_NULL)
     private String noHP;

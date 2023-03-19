@@ -2,12 +2,16 @@ package com.juaracoding.DBLaundry.dto;
 
 public class PelangganDTO {
 
+    //variabel untuk menampung ID pelanggan
     private Long idPelanggan;
 
+    //variabel untuk menampung nama lengkap
     private String namaLengkap;
 
+    //variabel untuk menampung alamat lengkap
     private String alamatLengkap;
 
+    //variabel untuk menampung no handphone
     private String noHandphone;
 
     public Long getIdPelanggan() {

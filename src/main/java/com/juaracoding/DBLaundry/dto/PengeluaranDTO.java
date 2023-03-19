@@ -12,12 +12,16 @@ import java.util.Date;
 
 public class PengeluaranDTO {
 
+    //variabel untuk menampung ID pengeluaran
     private Long idPengeluaran;
 
+    //variabel untuk menampung nama pengeluaran
     private String namaPengeluaran;
 
+    //variabel untuk menampung biaya
     private Long biaya;
 
+    //variabel untuk menampung created date
     private Date createdDate;
 
     public Long getIdPengeluaran() {

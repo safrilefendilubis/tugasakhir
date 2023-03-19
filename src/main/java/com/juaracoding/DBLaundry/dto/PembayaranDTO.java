@@ -1,8 +1,11 @@
 package com.juaracoding.DBLaundry.dto;
 
 public class PembayaranDTO {
+
+    //variabel untuk menampung ID pembayaran
     private Long idPembayaran;
 
+    //variabel untuk menampung nama pembayaran
     private String namaPembayaran;
 
     public Long getIdPembayaran() {

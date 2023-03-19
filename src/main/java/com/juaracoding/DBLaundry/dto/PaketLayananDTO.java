@@ -2,13 +2,17 @@ package com.juaracoding.DBLaundry.dto;
 
 public class PaketLayananDTO {
 
+    //variabel untuk menampung ID List Harga
     private Long idListHarga;
 
+    //variabel untuk menampung nama paket
     private String namaPaket;
 
+    //variabel untuk menampung harga perkilo
     private Long hargaPerKilo;
 
-    private String tipeLayanan;//komponen select di
+    //variabel untuk menampung tipe layanan
+    private String tipeLayanan;
 
     public Long getIdListHarga() {
         return idListHarga;

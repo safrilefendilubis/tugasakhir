@@ -6,16 +6,22 @@ import com.juaracoding.DBLaundry.model.Pembayaran;
 
 public class PesananDTO {
 
+    //variabel untuk menampung ID pesanan
     private Long idPesanan;
 
+    //object  relation ke model paket layanan
     private PaketLayanan paketLayanan;
 
+    //object  relation ke model pelanggan
     private Pelanggan pelanggan;
 
+    //object  relation ke model pembayaran
     private Pembayaran pembayaran;
 
+    //variabel untuk menampung berat
     private Double berat;
 
+    //variabel untuk menampung total harga
     private Long totalHarga;
 
     public Long getIdPesanan() {
