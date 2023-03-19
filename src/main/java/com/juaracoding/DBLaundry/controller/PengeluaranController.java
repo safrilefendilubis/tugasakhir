@@ -1,7 +1,7 @@
 package com.juaracoding.DBLaundry.controller;/*
 Created By IntelliJ IDEA 2022.3.2 (Ultimate Edition)
 Build #IU-223.8617.56, built on January 26, 2023
-@Author Syarifudin a.k.a. Muhamad Syarifuidn
+@Author Syarifudin a.k.a. Muhamad Syarifudin
 Java Developer
 Created on 09/03/2023 12:57
 @Last Modified 09/03/2023 12:57

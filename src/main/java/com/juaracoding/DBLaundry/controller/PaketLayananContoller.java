@@ -95,6 +95,7 @@ public class PaketLayananContoller {
             }
         }
         //objectMapper mengambil data paketlayanan dengan findById(id,request)
+        //kemudian add attribute pelangganDTO ke dalam edit_paketlayanan.html
         //fungsi paketLayananDTO adalah mendapatkan data dari variabel objectmapper jika null maka akan berisi null dan jika tidak maka akan terisi data dari paket layanan
         objectMapper = paketLayananService.findById(id,request);
         PaketLayananDTO paketLayananDTO = (objectMapper.get("data")==null?null:(PaketLayananDTO) objectMapper.get("data"));
