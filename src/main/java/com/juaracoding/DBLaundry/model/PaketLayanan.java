@@ -16,7 +16,7 @@ public class PaketLayanan {
     private String namaPaket;
 
     @Column(name = "Harga")
-    private Double hargaPerKilo;
+    private Long hargaPerKilo;
 
     @Column(name = "TipeLayanan")
     private String tipeLayanan;//komponen select di
@@ -51,11 +51,11 @@ public class PaketLayanan {
         this.namaPaket = namaPaket;
     }
 
-    public Double getHargaPerKilo() {
+    public Long getHargaPerKilo() {
         return hargaPerKilo;
     }
 
-    public void setHargaPerKilo(Double hargaPerKilo) {
+    public void setHargaPerKilo(Long hargaPerKilo) {
         this.hargaPerKilo = hargaPerKilo;
     }
 

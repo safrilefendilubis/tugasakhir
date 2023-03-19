@@ -6,7 +6,7 @@ public class PaketLayananDTO {
 
     private String namaPaket;
 
-    private Double hargaPerKilo;
+    private Long hargaPerKilo;
 
     private String tipeLayanan;//komponen select di
 
@@ -26,11 +26,11 @@ public class PaketLayananDTO {
         this.namaPaket = namaPaket;
     }
 
-    public Double getHargaPerKilo() {
+    public Long getHargaPerKilo() {
         return hargaPerKilo;
     }
 
-    public void setHargaPerKilo(Double hargaPerKilo) {
+    public void setHargaPerKilo(Long hargaPerKilo) {
         this.hargaPerKilo = hargaPerKilo;
     }
 

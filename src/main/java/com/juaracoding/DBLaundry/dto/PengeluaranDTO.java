@@ -16,7 +16,7 @@ public class PengeluaranDTO {
 
     private String namaPengeluaran;
 
-    private String biaya;
+    private Long biaya;
 
     private Date createdDate;
 
@@ -36,11 +36,11 @@ public class PengeluaranDTO {
         this.namaPengeluaran = namaPengeluaran;
     }
 
-    public String getBiaya() {
+    public Long getBiaya() {
         return biaya;
     }
 
-    public void setBiaya(String biaya) {
+    public void setBiaya(Long biaya) {
         this.biaya = biaya;
     }
 

@@ -28,7 +28,7 @@ public class Pengeluaran {
     private String namaPengeluaran;
 
     @Column(name = "Biaya")
-    private Double biaya;
+    private Long biaya;
 
     /*
      * Start Audit Trails
@@ -67,11 +67,11 @@ public class Pengeluaran {
         this.namaPengeluaran = namaPengeluaran;
     }
 
-    public Double getBiaya() {
+    public Long getBiaya() {
         return biaya;
     }
 
-    public void setBiaya(Double biaya) {
+    public void setBiaya(Long biaya) {
         this.biaya = biaya;
     }
 

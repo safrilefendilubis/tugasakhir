@@ -16,7 +16,7 @@ public class PesananDTO {
 
     private Double berat;
 
-    private Double totalHarga;
+    private Long totalHarga;
 
     public Long getIdPesanan() {
         return idPesanan;
@@ -58,11 +58,11 @@ public class PesananDTO {
         this.berat = berat;
     }
 
-    public Double getTotalHarga() {
+    public Long getTotalHarga() {
         return totalHarga;
     }
 
-    public void setTotalHarga(Double totalHarga) {
+    public void setTotalHarga(Long totalHarga) {
         this.totalHarga = totalHarga;
     }
 }
