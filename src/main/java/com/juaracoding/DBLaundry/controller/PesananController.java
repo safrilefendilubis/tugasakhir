@@ -30,9 +30,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import com.juaracoding.DBLaundry.utils.PdfGeneratorLibre;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -45,12 +51,18 @@ public class PesananController {
     private PaketLayananService paketLayananService;
     private PelangganService pelangganService;
     private PembayaranService pembayaranService;
+
+    private PdfGeneratorLibre generator = null;
     @Autowired
     private ModelMapper modelMapper;
     private Map<String,Object> objectMapper = new HashMap<String,Object>();
     private Map<String,String> mapSorting = new HashMap<String,String>();
     private String [] strExceptionArr = new String[2];
     private MappingAttribute mappingAttribute = new MappingAttribute();
+
+    private StringBuilder sBuild = new StringBuilder();
+
+    private String[][] strBody = null;
 
     public PesananController(PesananService pesananService,
                              PaketLayananService paketLayananService,
@@ -290,14 +302,82 @@ public class PesananController {
 
     private void mapSorting()
     {
-        mapSorting.put("id","ID PESANAN");
-        mapSorting.put("nama","NAMA LENGKAP");
-        mapSorting.put("layanan","NAMA PAKET");
-        mapSorting.put("tipe","TIPE LAYANAN");
-        mapSorting.put("berat","BERAT");
-        mapSorting.put("harga","HARGA PER KILO");
-        mapSorting.put("total","TOTAL HARGA");
-        mapSorting.put("cara","NAMA PEMBAYARAN");
+        mapSorting.put("id","idPesanan");
+        mapSorting.put("nama","namaLengkap");
+        mapSorting.put("layanan","namaPaket");
+        mapSorting.put("tipe","tipeLayanan");
+        mapSorting.put("berat","berat");
+        mapSorting.put("harga","hargaPerKilo");
+        mapSorting.put("total","totalHarga");
+        mapSorting.put("cara","namaPembayaran");
 
+    }
+
+    @GetMapping("/v1/pesanan/xportpdflibre")
+    public void exportToPDFLibre(
+            Model model,
+            @RequestParam String columnFirst,
+            @RequestParam String valueFirst,
+            WebRequest request,
+            HttpServletResponse response
+    ) {
+        mappingAttribute.setAttribute(model, request);//untuk set session ke attribut
+        List<PesananDTO> listPesananDTO = pesananService.dataToExport(request, columnFirst, valueFirst);
+        response.setContentType("application/pdf");
+        DateFormat dateFormat = new SimpleDateFormat("YYYYMMDDHHMMSS.sss");
+        String currentDateTime = dateFormat.format(new Date());
+        String headerkey = "Content-Disposition";
+        sBuild.setLength(0);
+        String headervalue = sBuild.append("attachment; filename=pesananlist").
+                append(currentDateTime).append(".pdf").toString();
+        response.setHeader(headerkey, headervalue);
+        generator = new PdfGeneratorLibre();
+        int intStrHeader = 9;// INI YANG DIRUBAH SESUAIKAN DENGAN JUMLAH KOLOM
+        String[] strHeader = new String[intStrHeader];
+
+        strHeader[0] = "ID";
+        strHeader[1] = "NO";
+        strHeader[2] = "NAMA PELANGGAN";
+        strHeader[3] = "LAYANAN";
+        strHeader[4] = "PAKET";
+        strHeader[5] = "BERAT";
+        strHeader[6] = "HARGA PERKILO";
+        strHeader[7] = "TOTAL HARGA";
+        strHeader[8] = "CARA BAYAR";
+
+        int intListPesananDTO = listPesananDTO.size();
+        strBody = new String[intListPesananDTO][intStrHeader];
+        String strNamaPelanggan = "";
+        String strLayanan = "";
+        String strPaket = "";
+        String strHargaPerkilo = "";
+        String strCaraBayar = "";
+
+        for (int i = 0; i < listPesananDTO.size(); i++) {
+            /*
+                INI KALIAN MAPPING TAPI HATI2 DENGAN OBJECT, HARUS DI HANDLE NULL NYA
+             */
+
+            strNamaPelanggan = listPesananDTO.get(i).getPelanggan() == null ? "-" : listPesananDTO.get(i).getPelanggan().getNamaLengkap();
+            strLayanan = listPesananDTO.get(i).getPaketLayanan() == null ? "-" : listPesananDTO.get(i).getPaketLayanan().getNamaPaket();
+            strHargaPerkilo = listPesananDTO.get(i).getPaketLayanan() == null ? "-" : String.valueOf(listPesananDTO.get(i).getPaketLayanan().getHargaPerKilo().intValue());
+            strCaraBayar = listPesananDTO.get(i).getPembayaran() == null ? "-" : listPesananDTO.get(i).getPembayaran().getNamaPembayaran();
+            strPaket = listPesananDTO.get(i).getPaketLayanan() == null ? "-" : listPesananDTO.get(i).getPaketLayanan().getTipeLayanan();
+            strBody[i][0] = String.valueOf(i);
+            strBody[i][1] = String.valueOf(listPesananDTO.get(i).getIdPesanan());
+            strBody[i][2] = strNamaPelanggan;
+            strBody[i][3] = strLayanan;
+            strBody[i][4] = strPaket;
+            strBody[i][5] = String.valueOf(listPesananDTO.get(i).getBerat());
+            strBody[i][6] = strHargaPerkilo;
+            strBody[i][7] = String.valueOf(Math.round(listPesananDTO.get(i).getTotalHarga()));
+            strBody[i][8] = strCaraBayar;
+        }
+
+        sBuild.setLength(0);
+        generator.generate(sBuild.
+                append("LIST PESANAN \n").//JUDUL REPORT
+                        append("total data : ").append(intListPesananDTO).//VARIABEL TOTAL DATA
+                        toString(), strHeader, strBody, response);
     }
 }

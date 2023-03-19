@@ -19,17 +19,25 @@ public interface PesananRepo extends JpaRepository<Pesanan,Long> {
     Page<Pesanan> findByIsDeleteAndPaketLayananNamaPaketContainsIgnoreCase(Pageable page , byte byteIsDelete, String values);
     Page<Pesanan> findByIsDeleteAndPaketLayananTipeLayananContainsIgnoreCase(Pageable page , byte byteIsDelete, String values);
     Page<Pesanan> findByIsDeleteAndPembayaranNamaPembayaranContainsIgnoreCase(Pageable page , byte byteIsDelete, String values);
+    List<Pesanan> findByIsDeleteAndPelangganNamaLengkapContainsIgnoreCase(byte byteIsDelete, String values);
+    List<Pesanan> findByIsDeleteAndIdPesanan(byte byteIsDelete, Long values);
 
-//    @Query("SELECT SUM(a.berat * d.hargaPerKilo) FROM Pesanan a " +
-//            "JOIN a.pelanggan b " +
-//            "JOIN a.pembayaran c " +
-//            "JOIN a.paketLayanan d  WHERE DATENAME(month, GETDATE()) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
-//    double calculationCurrentMonthReport();
-//
-//    @Query("SELECT SUM(a.berat * d.hargaPerKilo) FROM Pesanan a " +
-//            "JOIN a.pelanggan b " +
-//            "JOIN a.pembayaran c " +
-//            "JOIN a.paketLayanan d  WHERE DATENAME(month, DATEADD(month,:numbr,GETDATE())) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
-//    Double calculationDynamicReport(Double numbr);
+    @Query("SELECT SUM(a.berat * d.hargaPerKilo) FROM Pesanan a " +
+            "JOIN a.pelanggan b " +
+            "JOIN a.pembayaran c " +
+            "JOIN a.paketLayanan d  WHERE DATENAME(month, GETDATE()) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
+    Double calculationCurrentMonthReport();
+
+    @Query("SELECT a.pelanggan.namaLengkap,a.paketLayanan.namaPaket,a.paketLayanan.tipeLayanan,a.berat,a.paketLayanan.hargaPerKilo FROM Pesanan a " +
+            "JOIN a.pelanggan b " +
+            "JOIN a.pembayaran c " +
+            "JOIN a.paketLayanan d  WHERE DATENAME(month, GETDATE()) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
+    Page<Pesanan> pesananPerMonth(Pageable pageable);
+
+    @Query("SELECT SUM(a.berat * d.hargaPerKilo) FROM Pesanan a " +
+            "JOIN a.pelanggan b " +
+            "JOIN a.pembayaran c " +
+            "JOIN a.paketLayanan d  WHERE DATENAME(month, DATEADD(month,:numbr,GETDATE())) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
+    Double calculationDynamicReport(Double numbr);
 }
 

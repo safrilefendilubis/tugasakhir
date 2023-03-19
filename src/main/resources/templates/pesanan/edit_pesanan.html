@@ -1,4 +1,4 @@
-<form th:action="@{/api/usrmgmnt/v1/pesanan/edit/{id}(id=${pesanan.idPesanan})}" th:object = "${pesanan}" method="POST" id="ubahPesanan"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
+<form th:action="@{/api/mgmnt/v1/pesanan/edit/{id}(id=${pesanan.idPesanan})}" th:object = "${pesanan}" method="POST" id="ubahPesanan"><!--	ID FORM TIDAK BOLEH SAMA DENGAN ID MODALS DI FRAGMENT -->
 	<input type="hidden" value="b203f4720d7f4db62d8988c0f6207b80" /><!-- form generate id security of front end -->
 
 	<div th:if="${#fields.hasErrors('global')}" class="error-box error-danger" >

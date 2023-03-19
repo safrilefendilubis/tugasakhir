@@ -184,5 +184,9 @@ public class ConstantMessage {
     * PEMBAYARAN
     * */
 
-    public final static String WARNING_PEMBAYARAN_NOT_EXISTS = "PEMBAYARAN TIDAK DITEMUKAN";
+    public final static String WARNING_USER_NOT_EXISTS = "USER TIDAK DOTEMUKAN";
+    public final static String VERIFY_LINK_VALID = "LINK VERIFIKASI VALID";
+    public final static String USER_IS_ACTIVE = "USER SUDAH AKTIF";
+
+    public static final String WARNING_PEMBAYARAN_NOT_EXISTS = "PEMBAYARAN TIDAK ADA";
 }

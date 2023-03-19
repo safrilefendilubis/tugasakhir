@@ -224,19 +224,20 @@ public class UserController {
         if(isSuccess)
         {
             Userz nextUser = (Userz) objectMapper.get("data");
-//            nextUser.getAkses().getListMenuAkses().get(0).getMenuHeader().getNamaMenuHeader();
             //        System.out.println(WebRequest.SCOPE_REQUEST);//0
             //        System.out.println(WebRequest.SCOPE_SESSION);//1
             //0 = scope request artinya hanya saat login saja tidak menyimpan di memory server / database
             //1 = scope session artinya setelah login dan akan menyimpan data selama session masih aktif
+//            nextUser.getAkses().getListMenuAkses().get(0).getMenuHeader().getNamaMenuHeader();
             request.setAttribute("USR_ID",nextUser.getIdUser(),1);//cara ambil request.getAttribute("USR_ID",1)
             request.setAttribute("EMAIL",nextUser.getEmail(),1);//cara ambil request.getAttribute("EMAIL",1)
             request.setAttribute("NO_HP",nextUser.getNoHP(),1);//cara ambil request.getAttribute("NO_HP",1)
             request.setAttribute("USR_NAME",nextUser.getUsername(),1);//cara ambil request.getAttribute("USR_NAME",1)
             request.setAttribute("HTML_MENU", new GenerateMenuString().menuInnerHtml(nextUser.getAkses()),1);//cara ambil request.getAttribute("USR_NAME",1)
             request.setAttribute("UNM", nextUser.getUsername(),1);
-//            Integer douReport = (int) pesananRepo.calculationCurrentMonthReport();
-//            model.addAttribute("currentProfit", "Rp."+String.valueOf(douReport));
+            request.setAttribute("NML", nextUser.getNamaLengkap(),1);
+            Integer douReport = pesananRepo.calculationCurrentMonthReport() == null ? 0 : pesananRepo.calculationCurrentMonthReport().intValue();
+            model.addAttribute("currentProfit", "Rp."+String.valueOf(douReport));
             mappingAttribute.setAttribute(model,objectMapper,request);//urutan nya ini terakhir
             return "index_1";
         }
@@ -303,7 +304,7 @@ public class UserController {
     }
 
     /*
-        VERIFIKASI TOKEN YANG SUDAH DIKIRIM KE EMAIL UNTUK LUPA PASSWORD PROSES YANG PERTAMYA KALI
+        VERIFIKASI TOKEN YANG SUDAH DIKIRIM KE EMAIL UNTUK LUPA PASSWORD PROSES YANG PERTAMA KALI
      */
     @PostMapping("/v1/vertokenfp")
     public String verifyTokenForgetPwd(@ModelAttribute("forgetpwd")

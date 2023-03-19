@@ -21,7 +21,7 @@
   <link rel="stylesheet" type="text/css" th:href="@{/assets/css/style.css}">
   <link id="color" rel="stylesheet" th:href="@{/assets/css/color-1.css}" media="screen">
   <link rel="stylesheet" type="text/css" th:href="@{/assets/css/responsive.css}">
-  <title>Document</title>
+  <title>Dashboard</title>
 </head>
 <body>
 <!-- Loader starts-->
@@ -75,8 +75,8 @@
                 <div class="media">
                   <div class="media-body">
                     <div class="greeting-user">
-                      <h1>Selamat Datang,<span th:text="${UNMZ}"></span>!</h1>
-                      <p>Sekarang Anda Dapat Dengan Mudah Menjaga Discord Bots Tetap Aktif Dan Memantau Situs Web!</p><a class="btn btn-outline-white_color" href="https://linkclk.net" target="_blank">Our Link Shortening Site!<i class="fa-solid fa-circle-arrow-right"></i></a>
+                      <h1>Selamat Datang, <span th:text="${NMLZ}"></span>!</h1>
+                      <p>Sekarang anda dapat dengan mudah melakukan pencatatan laundry dengan website kami !</p>
                     </div>
                   </div>
                 </div>
@@ -95,7 +95,7 @@
             </div>
             <div class="card-body">
               <h3>
-                <th:block th:if="${currentProfit != null}" th:text="${currentProfit}"></th:block>
+                <th:block th:text="${currentProfit}"></th:block>
               </h3>
             </div>
           </div>
@@ -104,7 +104,7 @@
         <div class="col-sm-12 col-md-6 col-xl-6">
           <div class="card card-absolute">
             <div class="card-header bg-secondary">
-              <h5 class="text-white">Settings <i class="fa-solid fa-gears"></i></h5>
+              <h5 class="text-white">Profil <i class="fa-solid fa-user"></i></h5>
             </div>
             <div class="card-body">
               <p></p>

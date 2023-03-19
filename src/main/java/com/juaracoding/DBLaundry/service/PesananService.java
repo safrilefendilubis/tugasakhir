@@ -387,4 +387,41 @@ public class PesananService {
 
         return pesananRepo.findByIsDelete(pageable,(byte) 1);
     }
+
+    public List<PesananDTO> dataToExport(WebRequest request,String columnFirst,String valueFirst)
+    {
+        List<Pesanan> listPesanan = null;
+        List<PesananDTO> listPesananDTO = null;
+        Map<String,Object> mapResult = null;
+
+        try
+        {
+            if(columnFirst.equals("id"))
+            {
+                try
+                {
+                    Long.parseLong(valueFirst);
+                }
+                catch (Exception e)
+                {
+                    strExceptionArr[1] = "dataToExport(WebRequest request,String columFirst,String valueFirst) --- LINE 209";
+                    LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+                    return new ArrayList<PesananDTO>();
+                }
+            }
+            if(listPesanan.size()==0)
+            {
+                return new ArrayList<PesananDTO>();
+            }
+            listPesananDTO = modelMapper.map(listPesanan, new TypeToken<List<PesananDTO>>() {}.getType());
+        }
+
+        catch (Exception e)
+        {
+            strExceptionArr[1] = "dataToExport(WebRequest request,String columFirst,String valueFirst) --- LINE 243";
+            LoggingFile.exceptionStringz(strExceptionArr, e, OtherConfig.getFlagLogging());
+            return new ArrayList<PesananDTO>();
+        }
+        return listPesananDTO;
+    }
 }

@@ -38,6 +38,7 @@ public class MappingAttribute {
         model.addAttribute("NO_HPZ",request.getAttribute("NO_HP",1));//panggil di web dengan nama ${NO_HPZ}
         model.addAttribute("EMAILZ",request.getAttribute("EMAIL",1));//panggil di web dengan nama ${EMAILZ}
         model.addAttribute("USR_NAMEZ",request.getAttribute("USR_NAME",1));//panggil di web dengan nama ${USR_NAMEZ}
+        model.addAttribute("NMLZ",request.getAttribute("NML",1));//panggil di web dengan nama ${NM_LGKP}<07 03 2023>
         model.addAttribute("HTML_MENUZ",request.getAttribute("HTML_MENU",1));//panggil di web dengan nama ${HTML_MENUZ}<07 03 2023>
         if(mapz.get("errorCode") != null)
         {
@@ -52,6 +53,7 @@ public class MappingAttribute {
         model.addAttribute("NO_HPZ",request.getAttribute("NO_HP",1));//panggil di web dengan nama ${NO_HPZ}
         model.addAttribute("EMAILZ",request.getAttribute("EMAIL",1));//panggil di web dengan nama ${EMAILZ}
         model.addAttribute("USR_NAMEZ",request.getAttribute("USR_NAME",1));//panggil di web dengan nama ${USR_NAMEZ}
+        model.addAttribute("NM_LGKP",request.getAttribute("HTML_MENU",1));//panggil di web dengan nama ${NM_LGKP}<07 03 2023>
         model.addAttribute("HTML_MENUZ",request.getAttribute("HTML_MENU",1));//panggil di web dengan nama ${HTML_MENUZ}<07 03 2023>
         model.addAttribute("UNMZ",request.getAttribute("UNM",1));//panggil di html dengan nama ${USR_IDZ}
 

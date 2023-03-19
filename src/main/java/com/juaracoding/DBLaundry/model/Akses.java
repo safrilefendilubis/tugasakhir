@@ -28,10 +28,6 @@ public class Akses {
             "IDAkses", "IDMenu" }))
     private List<Menu> listMenuAkses;
 
-    @ManyToOne
-    @JoinColumn(name = "IDDivisi")
-    private Divisi divisi;
-
     @Column(name ="CreatedDate" , nullable = false)
     private Date createdDate = new Date();
 
@@ -48,14 +44,6 @@ public class Akses {
     /*
         end audit trails
      */
-
-    public Divisi getDivisi() {
-        return divisi;
-    }
-
-    public void setDivisi(Divisi divisi) {
-        this.divisi = divisi;
-    }
 
     public List<Menu> getListMenuAkses() {
         return listMenuAkses;

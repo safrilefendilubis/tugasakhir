@@ -133,7 +133,7 @@
 							<thead class="table-dark">
 							<tr>
 								<th>
-									<a class="" th:href="@{'/api/mgmnt/v1/pesanan/fbpsb/'
+									<a class="" th:href="@{'/api/mgmnt/v1/paketlayanan/fbpsb/'
 																			+ ${currentPage}
 																			+ '/'
 																			+ (${#strings.equals(data.get('sort'),'asc')} ? 'desc' : 'asc')
@@ -162,11 +162,11 @@
 									ID</a>
 								</th>
 								<th style="text-align: center">
-									<a class="" th:href="@{'/api/mgmnt/v1/pesanan/fbpsb/'
+									<a class="" th:href="@{'/api/mgmnt/v1/paketlayanan/fbpsb/'
 																			+ ${currentPage}
 																			+ '/'
 																			+ (${#strings.equals(data.get('sort'),'asc')} ? 'desc' : 'asc')
-																			+ '/id?columnFirst='
+																			+ '/nama?columnFirst='
 																			+ ${columnFirst}
 																			+ '&valueFirst='
 																			+ ${valueFirst}
@@ -176,11 +176,11 @@
 									Nama Paket</a>
 								</th>
 								<th style="text-align: center">
-									<a class="" th:href="@{'/api/mgmnt/v1/pesanan/fbpsb/'
+									<a class="" th:href="@{'/api/mgmnt/v1/paketlayanan/fbpsb/'
 																			+ ${currentPage}
 																			+ '/'
 																			+ (${#strings.equals(data.get('sort'),'asc')} ? 'desc' : 'asc')
-																			+ '/id?columnFirst='
+																			+ '/harga?columnFirst='
 																			+ ${columnFirst}
 																			+ '&valueFirst='
 																			+ ${valueFirst}
@@ -190,11 +190,11 @@
 									Harga Per Kilo</a>
 								</th>
 								<th style="text-align: center">
-									<a class="" th:href="@{'/api/mgmnt/v1/pesanan/fbpsb/'
+									<a class="" th:href="@{'/api/mgmnt/v1/paketlayanan/fbpsb/'
 																			+ ${currentPage}
 																			+ '/'
 																			+ (${#strings.equals(data.get('sort'),'asc')} ? 'desc' : 'asc')
-																			+ '/id?columnFirst='
+																			+ '/tipe?columnFirst='
 																			+ ${columnFirst}
 																			+ '&valueFirst='
 																			+ ${valueFirst}

@@ -51,47 +51,64 @@ public class PembayaranController {
     }
     private void mapSorting()
     {
-        mapSorting.put("id","ID PEMBYARAN");
-        mapSorting.put("nama","NAMA PEMBAYARAN");
+        mapSorting.put("id","idPembayaran");
+        mapSorting.put("nama","namaPembayaran");
     }
+
+    //API GET BERFUNGSI UNTUK MEMUNCULKAN MODAL PEMBAYARAN
     @GetMapping("/v1/pembayaran/new")
     public String createPembayaran(Model model, WebRequest request)
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
             }
         }
+        //memasukan attribute pembayaran ke create_pembayaran.html
         model.addAttribute("pembayaran", new PembayaranDTO());
         return "pembayaran/create_pembayaran";
     }
+
+    //API GET BERFUNGSI UNTUK MEMUNCULKAN MODAL EDIT PEMBAYARAN
     @GetMapping("/v1/pembayaran/edit/{id}")
     public String editPembayaran(Model model, WebRequest request, @PathVariable("id") Long id)
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
             }
         }
+        //objectMapper mengambil data pembayaran dengan findById(id,request)
         objectMapper = pembayaranService.findById(id,request);
         PembayaranDTO pembayaranDTO = (objectMapper.get("data")==null?null:(PembayaranDTO) objectMapper.get("data"));
+            //jika objectmapper bernilai TRUE atau success maka akan muncul modal edit_pembayaran.html
         if((Boolean) objectMapper.get("success"))
         {
+            //membuat object pembayaranDTOForSelect sebagai penampung dari paketlayananDTO data
+            //kemudian add attribute pembayaranDTO ke dalam edit_paketlayanan.html
             PembayaranDTO pembayaranDTOForSelect = (PembayaranDTO) objectMapper.get("data");
             model.addAttribute("pembayaran", pembayaranDTO);
             return "pembayaran/edit_Pembayaran";
         }
         else
         {
+        //jika bernilai false maka akan redirect ke halaman awal pembayaran
             model.addAttribute("pembayaran", new PembayaranDTO());
             return "redirect:/api/mgmnt/v1/pembayaran/default";
         }
     }
 
+    //API POST BERFUNGSI UNTUK MENAMBAHKAN DATA PEMBAYARAN BARU
     @PostMapping("/v1/pembayaran/new")
     public String newPembayaran(@ModelAttribute(value = "pembayaran")
                             @Valid PembayaranDTO pembayaranDTO
@@ -100,8 +117,11 @@ public class PembayaranController {
             , WebRequest request
     )
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
@@ -109,6 +129,7 @@ public class PembayaranController {
         }
 
         /* START VALIDATION */
+        //jika data binding terjadi error maka akan muncul status error
         if(bindingResult.hasErrors())
         {
             model.addAttribute("pembayaran",pembayaranDTO);
@@ -116,8 +137,10 @@ public class PembayaranController {
 
             return "pembayaran/create_pembayaran";
         }
+        //set isValid TRUE
         Boolean isValid = true;
 
+        //jika isValid FALSE maka akan muncul modal create_pembayaran.html
         if(!isValid)
         {
             model.addAttribute("pembayaran",pembayaranDTO);
@@ -125,28 +148,41 @@ public class PembayaranController {
         }
         /* END OF VALIDATION */
 
+        //mengisi objcet pembayaran dengan modelMapper dengan mapping pembayaranDTO berserta token
+        //mengisi objectMapper dengan savePembayaran(pembayaran,request)
         Pembayaran pembayaran = modelMapper.map(pembayaranDTO, new TypeToken<Pembayaran>() {}.getType());
         objectMapper = pembayaranService.savePembayaran(pembayaran,request);
         if(objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+            //jika objectMapper terjadi error saat save data maka akan redirect logout
             return "redirect:/api/check/logout";
         }
-
+        //jika objectMapper bernilai TRUE atau berhasil maka akan redirect ke menu awal pembayaran dan muncul message berhasil disimpan
         if((Boolean) objectMapper.get("success"))
         {
+            //mapping attribute dengan parameter model dan object mapper
+            //dan menampilkan message data berhasil disimpan
+            //kemudian redirect ke menu awal pembayaran
             mappingAttribute.setAttribute(model,objectMapper);
             model.addAttribute("message","DATA BERHASIL DISIMPAN");
             Long idDataSave = objectMapper.get("idDataSave")==null?1:Long.parseLong(objectMapper.get("idDataSave").toString());
             return "redirect:/api/mgmnt/v1/pembayaran/fbpsb/0/asc/idPembayaran?columnFirst=id&valueFirst="+idDataSave+"&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         }
+        //jika objectmapper bernilai false maka akan muncul pesan error
         else
         {
+            //mapping attribute dengan error message binding result dan object mapper dan message
+            //add atribute pembayaran dengan pembayaran dto
+            //add atribute status error
+            //return ke create_pembayaran.html
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
             model.addAttribute("pembayaran",new PembayaranDTO());
             model.addAttribute("status","error");
             return "pembayaran/create_pembayaran";
         }
     }
+
+    // API POST BERFUNGSI UNTUK MENGEDIT DATA PEMBAYARAN
     @PostMapping("/v1/pembayaran/edit/{id}")
     public String editPembayaran(@ModelAttribute("pembayaran")
                              @Valid PembayaranDTO pembayaranDTO
@@ -157,13 +193,14 @@ public class PembayaranController {
     )
     {
         /* START VALIDATION */
+        //jika data binding error maka akan return ke modal edit_pembayaran.html
         if(bindingResult.hasErrors())
         {
             model.addAttribute("pembayaran",pembayaranDTO);
             return "pembayaran/edit_pembayaran";
         }
         Boolean isValid = true;
-
+        //jika isValid false maka akan return ke edit_pembayaran.html
         if(!isValid)
         {
             model.addAttribute("pembayaran",pembayaranDTO);
@@ -171,13 +208,16 @@ public class PembayaranController {
         }
         /* END OF VALIDATION */
 
+        //membuat object pembayaran dan mapping dengan pembayaranDTO beserta token
+        //mengisi objectMapper dengan updatePembayaran(id,pembayaran,request)
         Pembayaran pembayaran = modelMapper.map(pembayaranDTO, new TypeToken<Pembayaran>() {}.getType());
         objectMapper = pembayaranService.updatePembayaran(id,pembayaran,request);
         if(objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+            //jika pesan object mapper bernilai error maka akan redirect logout
             return "redirect:/api/check/logout";
         }
-
+            //jika object mapper bernilai true atau success maka akan redirect ke menu awal pembayaran
         if((Boolean) objectMapper.get("success"))
         {
             mappingAttribute.setAttribute(model,objectMapper);
@@ -186,25 +226,37 @@ public class PembayaranController {
         }
         else
         {
+            //mapping attrubute errir message dengan data message dari objectmapper
+            //kemudian return ke modal edit_pembayaran.html
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
             model.addAttribute("pembayaran",new PembayaranDTO());
             return "pembayaran/edit_pembayaran";
         }
     }
+
+    //API GET BERFUNGSI UNTUK MENAMPILKAN HALAMAN MENU PEMBAYARAN
     @GetMapping("/v1/pembayaran/default")
     public String getDefaultData(Model model,WebRequest request)
     {
+
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
             }
         }
+
+        //membuat object pageable dan mendapatkan pagerequest dengan parameter page,size,dan sort by properties
+        //mengisi objectmapper dengan findallpembayaran dengan parameter pageable dan request
         Pageable pageable = PageRequest.of(0,5, Sort.by("idPembayaran"));
         objectMapper = pembayaranService.findAllPembayaran(pageable,request);
         mappingAttribute.setAttribute(model,objectMapper,request);
 
+        //masuk ke pembayaran.html
         model.addAttribute("pembayaran",new PembayaranDTO());
         model.addAttribute("sortBy","idPembayaran");
         model.addAttribute("currentPage",1);
@@ -226,6 +278,8 @@ public class PembayaranController {
             @RequestParam String sizeComponent,
             WebRequest request
     ){
+        //mengambil value dari request param
+        //isi object pageable dengan pagerequest dengan parameter dari request param
         sortzBy = mapSorting.get(sortzBy);
         sortzBy = sortzBy==null?"idPembayaran":sortzBy;
         Pageable pageable = PageRequest.of(pagez==0?pagez:pagez-1,Integer.parseInt(sizeComponent.equals("")?"5":sizeComponent), sortz.equals("asc")?Sort.by(sortzBy):Sort.by(sortzBy).descending());

@@ -67,11 +67,11 @@ public class Pengeluaran {
         this.namaPengeluaran = namaPengeluaran;
     }
 
-    public String getBiaya() {
+    public Double getBiaya() {
         return biaya;
     }
 
-    public void setBiaya(String biaya) {
+    public void setBiaya(Double biaya) {
         this.biaya = biaya;
     }
 

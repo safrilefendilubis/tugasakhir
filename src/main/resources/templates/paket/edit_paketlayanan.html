@@ -35,14 +35,11 @@
 	</div>
 	<div class ="form-group">
 		<label> Tipe Paket Layanan </label>
-		<input
-				type = "text"
-				name = "berat"
-				th:field = "*{tipeLayanan}"
-				th:value = "*{tipeLayanan}"
-				class = "form-control"
-				placeholder="Masukkan Berat"
-		/>
+		<select th:field="*{tipeLayanan}" class="form-control">
+			<option value="Reguler">Reguler</option>
+			<option value="Premium">Premium</option>
+			<option value="Express">Express</option>
+		</select>
 		<ul>
 			<li th:each="err : ${#fields.errors('tipeLayanan')}" th:text="${err}" class="error" />
 		</ul>

@@ -11,8 +11,6 @@ public class AksesDTO {
 //    @JsonIgnoreProperties("listAksesMenu")
     private List<MenuDTO> listMenuAkses;
 
-    private DivisiDTO divisi;
-
     public Long getIdAkses() {
         return idAkses;
     }
@@ -35,14 +33,6 @@ public class AksesDTO {
 
     public void setListMenuAkses(List<MenuDTO> listMenuAkses) {
         this.listMenuAkses = listMenuAkses;
-    }
-
-    public DivisiDTO getDivisi() {
-        return divisi;
-    }
-
-    public void setDivisi(DivisiDTO divisi) {
-        this.divisi = divisi;
     }
 
     @Override

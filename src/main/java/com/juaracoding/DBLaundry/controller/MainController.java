@@ -39,8 +39,8 @@ public class MainController {
         model.addAttribute("usr",users);
         if(request.getAttribute("USR_ID",1)!=null)
         {
-//            Integer douReport = (int) pesananRepo.calculationCurrentMonthReport();
-//            model.addAttribute("currentProfit", "Rp."+String.valueOf(douReport));
+            Integer douReport = pesananRepo.calculationCurrentMonthReport() == null ? 0 : pesananRepo.calculationCurrentMonthReport().intValue();
+            model.addAttribute("currentProfit", "Rp."+String.valueOf(douReport));
             mappingAttribute.setAttribute(model,objectMapper,request);
 
             return "index_1";

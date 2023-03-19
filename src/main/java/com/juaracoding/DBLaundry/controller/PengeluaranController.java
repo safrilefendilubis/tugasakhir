@@ -54,9 +54,9 @@ public class PengeluaranController {
     }
 
     private void mapSorting() {
-        mapSorting.put("id", "ID PENGELUARAN");
-        mapSorting.put("nama", "NAMA PENGELUARAN");
-        mapSorting.put("biaya", "BIAYA");
+        mapSorting.put("id", "idPengeluaran");
+        mapSorting.put("nama", "namaPengeluaran");
+        mapSorting.put("biaya", "biaya");
     }
 
     @GetMapping("/v1/pengeluaran/new")
