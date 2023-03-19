@@ -59,6 +59,7 @@ public class PembayaranService {
         mapColumnSearch.put("nama","NAMA PEMBAYARAN");
     }
 
+    // METHOD SAVE PEMBAYARAN BERFUNGSI UNTUK MENYIMPAN DATA PEMBAYARAN
     public Map<String, Object> savePembayaran(Pembayaran pembayaran, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -87,6 +88,7 @@ public class PembayaranService {
                 null, request);
     }
 
+    // METHOD UPDATE PEMBAYARAN BERFUNGSI UNTUK MENGUBAH DATA PEMBAYARAN
     public Map<String, Object> updatePembayaran(Long idPembayaran, Pembayaran pembayaran, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -130,6 +132,7 @@ public class PembayaranService {
                 null, request);
     }
 
+    // METHOD SAVE UPLOAD FILE PEMBAYARAN BERFUNGSI UNTUK MENYIMPAN DATA PEMBAYARAN DARI FILE CSV
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> saveUploadFilePembayaran(List<Pembayaran> listPembayaran,
                                                         MultipartFile multipartFile,
@@ -160,6 +163,7 @@ public class PembayaranService {
                         request);
     }
 
+    // METHOD FIND ALL PEMBAYARAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA PEMBAYARAN
     public Map<String,Object> findAllPembayaran(Pageable pageable, WebRequest request)
     {
         List<PembayaranDTO> listPembayaranDTO = null;
@@ -201,6 +205,7 @@ public class PembayaranService {
                         null);
     }
 
+    // METHOD FIND BY PAGE BERFUNGSI UNTUK MENGAMBIL DATA PEMBAYARAN DENGAN RETURN PAGE
     public Map<String,Object> findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst)
     {
         Page<Pembayaran> pagePembayaran = null;
@@ -263,6 +268,7 @@ public class PembayaranService {
                         request);
     }
 
+    // METHOD FIND BY ID BERFUNGSI MENGAMBIL DATA PEMBAYARAN DENGAN ID
     public Map<String,Object> findById(Long idPembayaran, WebRequest request)
     {
         Pembayaran pembayaran = pembayaranRepo.findById(idPembayaran).orElseThrow (
@@ -284,6 +290,7 @@ public class PembayaranService {
                         request);
     }
 
+    // METHOD FIND ALL PEMBAYARAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA PEMBAYARAN
     public Map<String,Object> findAllPembayaran()//KHUSUS UNTUK FORM INPUT SAJA
     {
         List<PembayaranDTO> listPembayaranDTO = null;
@@ -320,6 +327,7 @@ public class PembayaranService {
                         null);
     }
 
+    // METHOD DELETE PEMBAYARAN BERFUNGSI UNTUK MENGHAPUS DATA PEMBAYARAN
     public Map<String, Object> deletePembayaran(Long idDemo, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_DELETE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -361,6 +369,7 @@ public class PembayaranService {
                 null, request);
     }
 
+    // METHOD GET ALL PEMBAYARAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA PEMBAYARAN DENGAN DTO
     public List<PembayaranDTO> getAllPembayaran()//KHUSUS UNTUK FORM INPUT SAJA
     {
         List<PembayaranDTO> listPembayaranDTO = null;

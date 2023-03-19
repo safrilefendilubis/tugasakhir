@@ -54,6 +54,7 @@ public class PengeluaranService {
         this.pengeluaranRepo = pengeluaranRepo;
     }
 
+    // METHOD SAVE PENGELUARAN BERFUNGSI MENYIMPAN DATA PENGELUARAN
     public Map<String, Object> savePengeluaran(Pengeluaran pengeluaran, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -81,6 +82,7 @@ public class PengeluaranService {
                 null, request);
     }
 
+    // METHOD UPDATE DATA PENGELUARAN BERFUNGSI UNTUK MENGUBAH DATA PENGELUARAN
     public Map<String, Object> updatePengeluaran(Long idPengeluaran,Pengeluaran pengeluaran, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -122,6 +124,7 @@ public class PengeluaranService {
                 null, request);
     }
 
+    // METHOD SAVE UPLOAD FILE PENGELUARAN BERFUNGSI UNTUK MENYIMPAN DATA PENGELUARAN DARI FILE CSV
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> saveUploadFilePengeluaran(List<Pengeluaran> listPengeluaran,
                                                   MultipartFile multipartFile,
@@ -151,6 +154,7 @@ public class PengeluaranService {
                         request);
     }
 
+    // METHOD FIND ALL PENGELUARAN BERFUNGSI MENGAMBIL SEMUA DATA PENELUARAN
     public Map<String,Object> findAllPengeluaran(Pageable pageable, WebRequest request)
     {
         List<PengeluaranDTO> listPengeluaranDTO = null;
@@ -193,6 +197,7 @@ public class PengeluaranService {
                         null);
     }
 
+    // METHOD FIND BY PAGE BERFUNGSI MENGAMBIL DATA BY PAGE
     public Map<String,Object> findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst)
     {
         Page<Pengeluaran> pagePengeluaran = null;
@@ -261,6 +266,7 @@ public class PengeluaranService {
                         request);
     }
 
+    // METHOD FIND BY ID BERFUNGSI MENGAMBIL DATA PENGELUARAN DENGAN ID
     public Map<String,Object> findById(Long id, WebRequest request)
     {
         Pengeluaran pengeluaran = pengeluaranRepo.findById(id).orElseThrow (
@@ -290,6 +296,7 @@ public class PengeluaranService {
 
     }
 
+    // METHOD GET DATA BY VALUE BERFUNGSI MENGAMBIL DATA DENGAN VALUE
     private Page<Pengeluaran> getDataByValue(Pageable pageable, String paramColumn, String paramValue)
     {
         if(paramValue.equals("") || paramValue==null)
@@ -308,6 +315,7 @@ public class PengeluaranService {
         return pengeluaranRepo.findByIsDelete(pageable,(byte) 1);// ini default kalau parameter search nya tidak sesuai--- asumsi nya di hit bukan dari web
     }
 
+    // METHOD DELETE PENGELUARAN BERFUNGSI MENGHAPUS DATA PENGELUARAN
     public Map<String, Object> deletePengeluaran(byte idPengeluaran,WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);

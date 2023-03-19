@@ -32,7 +32,7 @@ public interface PesananRepo extends JpaRepository<Pesanan,Long> {
             "JOIN a.pelanggan b " +
             "JOIN a.pembayaran c " +
             "JOIN a.paketLayanan d  WHERE DATENAME(month, GETDATE()) = DATENAME(month, a.createdDate) AND a.isDelete = 1")
-    Page<Pesanan> pesananPerMonth(Pageable pageable);
+    List<Pesanan> pesananPerMonth();
 
     @Query("SELECT SUM(a.berat * d.hargaPerKilo) FROM Pesanan a " +
             "JOIN a.pelanggan b " +

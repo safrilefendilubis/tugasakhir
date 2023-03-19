@@ -91,10 +91,11 @@ public class PembayaranController {
         //objectMapper mengambil data pembayaran dengan findById(id,request)
         objectMapper = pembayaranService.findById(id,request);
         PembayaranDTO pembayaranDTO = (objectMapper.get("data")==null?null:(PembayaranDTO) objectMapper.get("data"));
-            //jika objectmapper bernilai TRUE atau success maka akan muncul modal edit_pembayaran.html
         if((Boolean) objectMapper.get("success"))
         {
+            //jika objectMapper bernilai TRUE atau success maka akan muncul modal edit_pembayaran.html
             //membuat object pembayaranDTOForSelect sebagai penampung dari paketlayananDTO data
+            //fungsi pembayaranDTO adalah mendapatkan data dari variabel objectmapper jika null maka akan berisi null dan jika tidak maka akan terisi data dari pembayaran
             //kemudian add attribute pembayaranDTO ke dalam edit_paketlayanan.html
             PembayaranDTO pembayaranDTOForSelect = (PembayaranDTO) objectMapper.get("data");
             model.addAttribute("pembayaran", pembayaranDTO);
@@ -102,7 +103,7 @@ public class PembayaranController {
         }
         else
         {
-        //jika bernilai false maka akan redirect ke halaman awal pembayaran
+            //jika tidak success atau FALSE maka akan redirect ke menu halaman awal pembayaran
             model.addAttribute("pembayaran", new PembayaranDTO());
             return "redirect:/api/mgmnt/v1/pembayaran/default";
         }
@@ -292,6 +293,7 @@ public class PembayaranController {
         model.addAttribute("valueFirst",valueFirst);
         model.addAttribute("sizeComponent",sizeComponent);
 
+        //masuk ke pembayaran.html
         return "pembayaran/pembayaran";
     }
 
@@ -300,23 +302,33 @@ public class PembayaranController {
             , WebRequest request
             , @PathVariable("id") byte id
     ) {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
             if (request.getAttribute("USR_ID", 1) == null) {
                 return "redirect:/api/check/logout";
             }
         }
+
+        //objectMapper mengambil data dengan method deletePembayaran(id,request)
         objectMapper = pembayaranService.deletePembayaran((long) id,request);
         if (objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+            //jika object mapper message adalah error maka redirect ke logout
             return "redirect:/api/check/logout";
         }
 
+        //jika objectMapper bernilai TRUE atau success
         if ((Boolean) objectMapper.get("success")) {
+            //mapping atribute berisi model dan objectMapper dan add attribute pembayaran,pembayaranDTO ke dalam pembayaran.html
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("pembayaran", new PembayaranDTO());
             return "redirect:/api/mgmnt/v1/pembayaran/fbpsb/0/asc/idPembayaran?columnFirst=idPembayaran&valueFirst=" + id + "&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         } else {
+            //jika objectMapper bernilai FALSE atau tidak success
+            //mapping atribute berisi model dan objectMapper dan add attribute pembayaran,pembayaranDTO ke dalam pembayaran.html
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("pembayaran", new PembayaranDTO());
             return "pembayaran/pembayaran";

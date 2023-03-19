@@ -29,7 +29,7 @@ public class PdfGeneratorLibre {
         strExceptionArr[0] = "PdfGeneratorLibre";
     }
 
-    public void generate(String strTitle,String[] strHeader, String[][] strBody , HttpServletResponse response)  {
+    public void generate(String strTitle,String[] strHeader, String[][] strBody ,String strTotal,HttpServletResponse response)  {
         try
         {
             Document document = new Document(PageSize.A4);
@@ -43,13 +43,17 @@ public class PdfGeneratorLibre {
             document.open();
 
             Image image = Image.getInstance("https://i.ibb.co/wBPtZFj/logo.png");
-            image.scaleAbsolute(235f,70f);
+            image.scaleAbsolute(230f,60f);
             document.add(image);
 
             Font fontTiltle = FontFactory.getFont(FontFactory.TIMES_ROMAN);
             fontTiltle.setSize(20);
+            Font fontTiltle2 = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+            fontTiltle.setSize(14);
             Paragraph paragraph = new Paragraph(strTitle, fontTiltle);
+            Paragraph paragraph2 = new Paragraph(strTotal,fontTiltle);
             paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+            paragraph2.setAlignment(Paragraph.ALIGN_RIGHT);
             document.add(paragraph);
             PdfPTable table = new PdfPTable(9);
             table.setWidthPercentage(100f);
@@ -64,7 +68,7 @@ public class PdfGeneratorLibre {
             {
                 cell.setPhrase(new Phrase(strHeader[i], font));
 //                cell.setBackgroundColor(Color.LIGHT_GRAY);// INI DIGANTI BIAR GAK SAMA
-                cell.setBackgroundColor(Color.GRAY);// INI DIGANTI BIAR GAK SAMA
+                cell.setBackgroundColor(Color.BLACK);// INI DIGANTI BIAR GAK SAMA
                 table.addCell(cell);
             }
 
@@ -78,6 +82,7 @@ public class PdfGeneratorLibre {
             }
 
             document.add(table);
+            document.add(paragraph2);
             document.close();
         }
         catch(Exception e)

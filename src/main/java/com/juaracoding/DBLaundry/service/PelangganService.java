@@ -62,6 +62,7 @@ public class PelangganService {
 
     }
 
+    //METHOD SAVE PELANGGAN BERFUNGSI UNTUK MENAMBAH DATA PELANGGAN
     public Map<String, Object> savePelanggan(Pelanggan pelanggan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -92,6 +93,7 @@ public class PelangganService {
                 null, request);
     }
 
+    // METHOD UPDATE PELANGGAN BERFUNGSI UNTUK MENGUBAH DATA PELANGGAN
     public Map<String, Object> updatePelanggan(Long idPelanggan, Pelanggan pelanggan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -135,6 +137,7 @@ public class PelangganService {
                 null, request);
     }
 
+    // METHOD SAVE UPLOAD OF FILE PELANGGAN BERFUNGSI MENYIMPAN DATA PELANGGAN DARI FILE CSV
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> saveUploadFilePelanggan(List<Pelanggan> listPelanggan,
                                                        MultipartFile multipartFile,
@@ -164,6 +167,7 @@ public class PelangganService {
                         request);
     }
 
+    // METHOD FIND ALL PELANGGAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA PELANGGAN
     public Map<String,Object> findAllPelanggan(Pageable pageable, WebRequest request)
     {
         List<PelangganDTO> listPelangganDTO = null;
@@ -205,6 +209,7 @@ public class PelangganService {
                         null);
     }
 
+    // METHOD FIND BY PAGE BERFUNGSI UNTUK MENGAMBIL DATA DARI PELANGGAN DENGAN PAGE
     public Map<String,Object> findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst)
     {
         Page<Pelanggan> pagePelanggan = null;
@@ -267,6 +272,7 @@ public class PelangganService {
                         request);
     }
 
+    //METHOD FIND BY ID BERFUNGSI UNTUK MENGAMBIL DATA DENGAN PARAMETER ID
     public Map<String,Object> findById(Long idPelanggan, WebRequest request)
     {
         Pelanggan pelanggan = pelangganRepo.findById(idPelanggan).orElseThrow (
@@ -288,6 +294,7 @@ public class PelangganService {
                         request);
     }
 
+    // METHOD FIND ALL PELANGGAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA PELANGGAN
     public Map<String,Object> findAllPelanggan()//KHUSUS UNTUK FORM INPUT SAJA
     {
         List<PelangganDTO> listPelangganDTO = null;
@@ -324,6 +331,7 @@ public class PelangganService {
                         null);
     }
 
+    // METHOD DELETE PELANGGAN BERFUNGSI UNTUK MENGHAPUS DATA PELANGGAN
     public Map<String, Object> deletePelanggan(Long idPelanggan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_DELETE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -365,6 +373,7 @@ public class PelangganService {
                 null, request);
     }
 
+    // METHOD GET ALL PELANGGAN BERFUNGSI UNTUK MENGAMBIL DATA DARI PELANGGAN DENGAN DTO
     public List<PelangganDTO> getAllPelanggan()//KHUSUS UNTUK FORM INPUT SAJA
     {
         List<PelangganDTO> listPelangganDTO = null;
@@ -389,6 +398,7 @@ public class PelangganService {
         return listPelangganDTO;
     }
 
+    // METHOD GET DATA BY VALUE BERFUNGSI UNTUK MENGAMBIL DATA DARI PELANGGAN
     private Page<Pelanggan> getDataByValue(Pageable pageable, String paramColumn, String paramValue)
     {
         if(paramValue.equals("") || paramValue==null)

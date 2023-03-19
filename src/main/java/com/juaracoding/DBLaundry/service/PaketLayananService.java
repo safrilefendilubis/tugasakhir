@@ -59,16 +59,22 @@ public class PaketLayananService {
         mapColumnSearch.put("tipe","TIPE LAYANAN");
     }
 
+    //METHOD SAVE PAKET LAYANAN BERFUNGSI UNTUK MENAMBAH PAKET LAYANAN
     public Map<String, Object> savePaketLayanan(PaketLayanan paketLayanan, WebRequest request) {
+
+        //object strUserIdz mengambil attribute dari request USR_ID
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
 
         try {
+            //jika strUserIdz = null
             if(strUserIdz==null)
             {
+                //return response constant message error,httpstatus
                 return new ResponseHandler().generateModelAttribut(ConstantMessage.ERROR_FLOW_INVALID,
                         HttpStatus.NOT_ACCEPTABLE,null,"FV05001",request);
             }
+            //paketLayanan model setCreatedBy
             paketLayanan.setCreatedBy(Integer.parseInt(strUserIdz.toString()));
             paketLayanan.setCreatedDate(new Date());
             this.paketLayananRepo.save(paketLayanan);
@@ -86,6 +92,7 @@ public class PaketLayananService {
                 null, request);
     }
 
+    //METHOD UPDATE PAKET LAYANAN BERFUNGSI UNTUK MENGUPDATE DATA DARI PAKET LAYANAN
     public Map<String, Object> updatePaketLayanan(Long idPaketLayanan, PaketLayanan paketLayanan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -129,6 +136,7 @@ public class PaketLayananService {
                 null, request);
     }
 
+    //METHOD SAVE UPLOAD FILE PAKET LAYANAN BERFUNGSI UNTUK MENYIMPAN FILE DI PAKET LAYANAN
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> saveUploadFilePaketLayanan(List<PaketLayanan> listPaketLayanan,
                                                           MultipartFile multipartFile,
@@ -158,6 +166,7 @@ public class PaketLayananService {
                         request);
     }
 
+    //METHOD FIND ALL PAKET LAYANAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA DI PAKET LAYANAN
     public Map<String,Object> findAllPaketLayanan(Pageable pageable, WebRequest request)
     {
         List<PaketLayananDTO> listPaketLayananDTO = null;
@@ -199,6 +208,7 @@ public class PaketLayananService {
                         null);
     }
 
+    //METHOD FIND BY PAGE BERFUNGSI UNTUK MENGAMBIL DATA DARI PAKET LAYANAN DENGAN PAGINATION
     public Map<String,Object> findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst)
     {
         Page<PaketLayanan> pagePaketLayanan = null;
@@ -265,6 +275,7 @@ public class PaketLayananService {
                         request);
     }
 
+    //METHOD FIND BY ID BERFUNGSI MENGAMBIL DATA PAKET LAYANAN DENGAN ID
     public Map<String,Object> findById(Long idPaketLayanan, WebRequest request)
     {
         PaketLayanan paketLayanan = paketLayananRepo.findById(idPaketLayanan).orElseThrow (
@@ -286,6 +297,7 @@ public class PaketLayananService {
                         request);
     }
 
+    //METHOD FIND ALL PAKET LAYANAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA PAKET LAYANAN
     public Map<String,Object> findAllPaketLayanan()//KHUSUS UNTUK FORM INPUT SAJA
     {
         List<PaketLayananDTO> listPaketLayananDTO = null;
@@ -322,6 +334,7 @@ public class PaketLayananService {
                         null);
     }
 
+    // METHOD DELETE PAKET LAYANAN BERFUNGSI UNTUK MENGHAPUS DATA PAKET LAYANAN
     public Map<String, Object> deletePaketLayanan(Long idPaketLayanan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_DELETE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -363,6 +376,7 @@ public class PaketLayananService {
                 null, request);
     }
 
+    // METHOD GET ALL PAKET LAYANAN BERFUNGSI UNTUK MENGAMBIL SEMUA DATA PAKET LAYANAN DENGAN DTO
     public List<PaketLayananDTO> getAllPaketLayanan()//KHUSUS UNTUK FORM INPUT SAJA
     {
         List<PaketLayananDTO> listPaketLayananDTO = null;
@@ -387,6 +401,7 @@ public class PaketLayananService {
         return listPaketLayananDTO;
     }
 
+    // METHOD GET DATA BY VALUE BERFUNGSI UNTUK MENGAMBIL DATA DENGAN VALUE
     private Page<PaketLayanan> getDataByValue(Pageable pageable, String paramColumn, String paramValue)
     {
         if(paramValue.equals("") || paramValue==null)

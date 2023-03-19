@@ -94,23 +94,22 @@ public class PaketLayananContoller {
                 return "redirect:/api/check/logout";
             }
         }
-        //objectMapper mengambil data paketlayanan dengan findById(id,request)
-        //kemudian add attribute pelangganDTO ke dalam edit_paketlayanan.html
-        //fungsi paketLayananDTO adalah mendapatkan data dari variabel objectmapper jika null maka akan berisi null dan jika tidak maka akan terisi data dari paket layanan
+        //objectMapper mengambil data paketLayanan dengan findById(id,request)
         objectMapper = paketLayananService.findById(id,request);
         PaketLayananDTO paketLayananDTO = (objectMapper.get("data")==null?null:(PaketLayananDTO) objectMapper.get("data"));
-        //jika object mapper bernilai TRUE atau success maka akan masuk ke dalam edit_paketlayanan.html
         if((Boolean) objectMapper.get("success"))
         {
+            //jika object mapper bernilai TRUE atau success maka akan masuk ke dalam edit_paketlayanan.html
             //membuat object paketlayananDTOForSelect sebagai penampung dari paketlayananDTO data
+            //fungsi paketLayananDTO adalah mendapatkan data dari variabel objectmapper jika null maka akan berisi null dan jika tidak maka akan terisi data dari pakeLayanan
             //kemudian add attribute paketlayananDTO ke dalam edit_paketlayanan.html
             PaketLayananDTO paketLayananDTOForSelect = (PaketLayananDTO) objectMapper.get("data");
             model.addAttribute("paketLayanan", paketLayananDTO);
             return "paket/edit_paketlayanan";
         }
-        //jika tidak success maka akan redirect ke paketlayanan.html
         else
         {
+        //jika tidak success atau FALSE maka akan redirect ke menu halaman awal paketlayanan
 
             model.addAttribute("paketLayanan", new PaketLayananDTO());
             return "redirect:/api/mgmnt/v1/paketlayanan/default";
@@ -323,13 +322,13 @@ public class PaketLayananContoller {
             return "redirect:/api/check/logout";
         }
 
-        //jika objectmapper bernilai true atau success maka akan redirect ke tampilan paketlayanan.html
+        //jika objectmapper bernilai TRUE atau success maka akan redirect ke tampilan paketlayanan.html
         if ((Boolean) objectMapper.get("success")) {
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("paket", new PaketLayananDTO());
             return "redirect:/api/mgmnt/v1/paketlayanan/fbpsb/0/asc/idListHarga?columnFirst=idListHarga&valueFirst=" + id + "&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         } else {
-            //jika false maka akan masuk ke paketlayanan.html
+            //jika FALSE maka akan masuk ke paketlayanan.html
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("paket", new PaketLayananDTO());
             return "paket/paketlayanan";

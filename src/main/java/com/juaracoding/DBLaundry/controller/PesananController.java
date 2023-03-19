@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,8 @@ public class PesananController {
 
     private StringBuilder sBuild = new StringBuilder();
 
+    private StringBuilder sBuild2 = new StringBuilder();
+
     private String[][] strBody = null;
 
     public PesananController(PesananService pesananService,
@@ -76,16 +79,22 @@ public class PesananController {
         this.pembayaranService = pembayaranService;
     }
 
+
+    //API GET BERFUNGSI UNTUK MENAMPILKAN PESANAN MODAL
     @GetMapping("/v1/pesanan/new")
     public String createPesanan(Model model, WebRequest request)
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
             }
         }
+        //memasukan attribute pesanan ke create_pesanan.html
         model.addAttribute("pesanan", new PesananDTO());
         model.addAttribute("listPelanggan", pelangganService.getAllPelanggan());//untuk parent nya
         model.addAttribute("listPaketLayanan", paketLayananService.getAllPaketLayanan());//untuk parent nya
@@ -93,20 +102,30 @@ public class PesananController {
         return "pesanan/create_pesanan";
     }
 
+    //API GET BERFUNGSI MENAMPILKAN MODAL EDIT PESANAN
     @GetMapping("/v1/pesanan/edit/{id}")
     public String editPesanan(Model model, WebRequest request, @PathVariable("id") Long id)
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
             }
         }
+
+        //objectMapper mengambil data pesanan dengan findById(id,request)
+        //pesananDTO akan terisi jika data tidak null maka berisi PesananDTO object
         objectMapper = pesananService.findById(id,request);
         PesananDTO pesananDTO = (objectMapper.get("data")==null?null:(PesananDTO) objectMapper.get("data"));
+        //jika objectMapper bernilai TRUE atau success
         if((Boolean) objectMapper.get("success"))
         {
+            //pesananDTOForSelect berisi pesananDTO object data
+            //add attribute pesanan=pesananDTO ke edit_pesanan.html
             PesananDTO pesananDTOForSelect = (PesananDTO) objectMapper.get("data");
             model.addAttribute("pesanan", pesananDTO);
             model.addAttribute("listPaketLayanan", paketLayananService.getAllPaketLayanan());//untuk parent nya
@@ -118,11 +137,14 @@ public class PesananController {
         }
         else
         {
+            //jika objectMapper bernilai FALSE
+            //add attribute pesanan=pesananDTO to pesanan.html
             model.addAttribute("pesanan", new PesananDTO());
             return "redirect:/api/mgmnt/v1/pesanan/default";
         }
     }
 
+    //API POST BERFUNGSI UNTUK MEMBUAT DATA PESANAN BARU
     @PostMapping("/v1/pesanan/new")
     public String newPesanan(@ModelAttribute(value = "pesanan")
                           @Valid PesananDTO pesananDTO
@@ -131,8 +153,11 @@ public class PesananController {
             , WebRequest request
     )
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
@@ -140,27 +165,38 @@ public class PesananController {
         }
 
         /* START VALIDATION */
+        //jika data binding error
         if(bindingResult.hasErrors())
         {
+            //add attribute pesanan=pesananDTO,status=error ke create_pesanan.html
             model.addAttribute("pesanan",pesananDTO);
             model.addAttribute("status","error");
             model.addAttribute("listPelanggan", pelangganService.getAllPelanggan());//untuk parent nya
             model.addAttribute("listPaketLayanan", paketLayananService.getAllPaketLayanan());//untuk parent nya
             model.addAttribute("listPembayaran", pembayaranService.getAllPembayaran());//untuk parent nya
-
+            //menampilkan modal create_pesanan.html
             return "pesanan/create_pesanan";
         }
+        //set isValid bernilai TRUE
         Boolean isValid = true;
 
+        //isi object pesanan dengan modelMapper mapping data pesananDTO beserta token
+        //objectMapper menampung dan menjalankan function savePesanan(pesanan,request)
         Pesanan pesanan = modelMapper.map(pesananDTO, new TypeToken<Pesanan>() {}.getType());
         objectMapper = pesananService.savePesanan(pesanan,request);
         if(objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+            //jika objectMapper message bernilai error
+            //redirect logout
             return "redirect:/api/check/logout";
         }
 
         if((Boolean) objectMapper.get("success"))
         {
+            //set mappingAttribute model objectMapper
+            //addAttribute message to redirect pesanan.html
+            //object idDataSave berisi data idDataSave dari objectMapper, jika bernilai null maka value 1, jika tidak maka get idDataSave
+            //redirect pesanan.html
             mappingAttribute.setAttribute(model,objectMapper);
             model.addAttribute("message","DATA BERHASIL DISIMPAN");
             Long idDataSave = objectMapper.get("idDataSave")==null?1:Long.parseLong(objectMapper.get("idDataSave").toString());
@@ -168,6 +204,10 @@ public class PesananController {
         }
         else
         {
+            //jika objectMapper bernilai FALSE
+            //set error message to attribute
+            //add attribute pesnan=new pesananDTO, dan status=error from mappingAttribute
+            //menampilkan create_pesanan modal
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
             model.addAttribute("listPelanggan", pelangganService.getAllPelanggan());//untuk parent nya
             model.addAttribute("listPaketLayanan", paketLayananService.getAllPaketLayanan());//untuk parent nya
@@ -178,6 +218,7 @@ public class PesananController {
         }
     }
 
+    //API POST BERFUNGSI UNTUK MENGEDIT DATA PESANAN
     @PostMapping("/v1/pesanan/edit/{id}")
     public String editPesanan(@ModelAttribute("pesanan")
                            @Valid PesananDTO pesananDTO
@@ -187,32 +228,55 @@ public class PesananController {
             , @PathVariable("id") Long id
     )
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
+        if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
+            mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
+            if (request.getAttribute("USR_ID", 1) == null) {
+                return "redirect:/api/check/logout";
+            }
+        }
         /* START VALIDATION */
+        //jika data binding terjadi error
         if(bindingResult.hasErrors())
         {
+            //add attribute to model pesanan=pesananDTO
+            //menampilkan edit_pesanan modal
             model.addAttribute("pesanan",pesananDTO);
             model.addAttribute("listPelanggan", pelangganService.getAllPelanggan());//untuk parent nya
             model.addAttribute("listPaketLayanan", paketLayananService.getAllPaketLayanan());//untuk parent nya
             model.addAttribute("listPembayaran", pembayaranService.getAllPembayaran());//untuk parent nya
             return "pesanan/edit_pesanan";
         }
+        //set isValid bernilai TRUE
         Boolean isValid = true;
 
+        //membuat object pengeluaran berisi modelMapper dengan mapping data pesananDTO beserta token
+        //objectMapper menampung proses updatePengeluaran(id,pesanan,request)
         Pesanan pesanan = modelMapper.map(pesananDTO, new TypeToken<Pesanan>() {}.getType());
         objectMapper = pesananService.updatePesanan(id,pesanan,request);
         if(objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+            //jika object mapper message adalah error maka redirect logout
             return "redirect:/api/check/logout";
         }
-
+        //jika objectMapper bernilai TRUE atau success
         if((Boolean) objectMapper.get("success"))
         {
+            //set attribute model,objectMapper to mapping attribute
+            //add attribute pesanan=pesananDTO
+            //redirect ke pesanan.html
             mappingAttribute.setAttribute(model,objectMapper);
             model.addAttribute("pesanan",new PesananDTO());
             return "redirect:/api/mgmnt/v1/pesanan/fbpsb/0/asc/id?columnFirst=id&valueFirst="+id+"&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         }
         else
         {
+            //jika objectMapper bernilai FALSE
+            //set error message to mappingAttribute
+            //add attribute pesanan=pesananDTO
+            //menampilkan edit_pesanan.html modal
             mappingAttribute.setErrorMessage(bindingResult,objectMapper.get("message").toString());
             model.addAttribute("pesanan",new PesananDTO());
             model.addAttribute("listPelanggan", pelangganService.getAllPelanggan());//untuk parent nya
@@ -222,33 +286,26 @@ public class PesananController {
         }
     }
 
+    //API GET BERFUNGSI UNTUK MENAMPILKAN HALAMAN DEFAULT PESANAN
     @GetMapping("/v1/pesanan/default")
     public String getDefaultData(Model model,WebRequest request)
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
             }
         }
+        //object pageable menampung pagerequest dengan parameter page,size,sort=idPesanan
+        //objectMapper menampung proses findAllPesanan(pageable,request)
+        //set attribute model,objectMapper,request ke mappingAttribute
         Pageable pageable = PageRequest.of(0,5, Sort.by("idPesanan"));
         objectMapper = pesananService.findAllPesanan(pageable,request);
         mappingAttribute.setAttribute(model,objectMapper,request);
-
-//        Double douReport = pesananRepo.calculationCurrentMonthReport();
-//        Integer douReport = (int) pesananRepo.calculationCurrentMonthReport();
-//        String strWarna = "";
-//        if(douReport<1000000)
-//        {
-//            strWarna = "red";
-//        }
-//        else {
-//            strWarna = "green";
-//        }
-//        model.addAttribute("currentProfit", "UNTUNG BULAN BERJALAN Rp."+String.valueOf(douReport));
-//        model.addAttribute("warnaProfit", strWarna);
-
         model.addAttribute("pesanan",new PesananDTO());
         model.addAttribute("sortBy","idPesanan");
         model.addAttribute("currentPage",1);
@@ -259,6 +316,7 @@ public class PesananController {
         return "/pesanan/pesanan";
     }
 
+    //API GET BERFUNGSI UNTUK MENAMPILKAN PESANAN DENGAN SORTIR
     @GetMapping("/v1/pesanan/fbpsb/{page}/{sort}/{sortby}")
     public String findByPesanan(
             Model model,
@@ -270,6 +328,11 @@ public class PesananController {
             @RequestParam String sizeComponent,
             WebRequest request
     ){
+        //menampung value dari request param ke dalam variabel
+        //object pageable menampung pagerequest dengan parameter dari variabel
+        //objectMapper menampung proses findByPage(pageable,request,columnFirst,valueFirst)
+        //setAttribute to mappingAttribute
+        //add attribute to pengeluaran.html
         sortzBy = mapSorting.get(sortzBy);
         sortzBy = sortzBy==null?"idPesanan":sortzBy;
         Pageable pageable = PageRequest.of(pagez==0?pagez:pagez-1,Integer.parseInt(sizeComponent.equals("")?"5":sizeComponent), sortz.equals("asc")?Sort.by(sortzBy):Sort.by(sortzBy).descending());
@@ -285,16 +348,21 @@ public class PesananController {
         return "/pesanan/pesanan";
     }
 
+    //API GET BERFUNGSI UNTUK MENGHAPUS PESANAN
     @GetMapping("/v1/pesanan/delete/{id}")
     public String deletePesanan(Model model, WebRequest request, @PathVariable("id") Long id)
     {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if(OtherConfig.getFlagSessionValidation().equals("y"))
         {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model,objectMapper,request);//untuk set session
             if(request.getAttribute("USR_ID",1)==null){
                 return "redirect:/api/check/logout";
             }
         }
+        //objectMapper menampung proses deletePengeluaran(id,request)
         objectMapper = pesananService.deletePesanan(id,request);
         PesananDTO pesananDTO = (objectMapper.get("data")==null?null:(PesananDTO) objectMapper.get("data"));
         return "redirect:/api/mgmnt/v1/pesanan/default";
@@ -313,6 +381,7 @@ public class PesananController {
 
     }
 
+    //API GET BERFUNGSI UNTUK MEMBUAT FILE REPORT PDF
     @GetMapping("/v1/pesanan/xportpdflibre")
     public void exportToPDFLibre(
             Model model,
@@ -352,6 +421,7 @@ public class PesananController {
         String strPaket = "";
         String strHargaPerkilo = "";
         String strCaraBayar = "";
+        Integer strTotal = pesananService.getTotalProfit();
 
         for (int i = 0; i < listPesananDTO.size(); i++) {
             /*
@@ -375,9 +445,10 @@ public class PesananController {
         }
 
         sBuild.setLength(0);
+        sBuild2.setLength(0);
         generator.generate(sBuild.
                 append("LIST PESANAN \n").//JUDUL REPORT
                         append("total data : ").append(intListPesananDTO).//VARIABEL TOTAL DATA
-                        toString(), strHeader, strBody, response);
+                        toString(), strHeader, strBody,sBuild2.append("TOTAL KEUNTUNGAN SEBULAN : ").append("Rp."+strTotal).toString(), response);
     }
 }

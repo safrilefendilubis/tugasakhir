@@ -98,18 +98,19 @@ public class PelangganController {
         //objectMapper mengambil data pelanggan dengan findById(id,request)
         objectMapper = pelangganService.findById(id,request);
         PelangganDTO pelangganDTO = (objectMapper.get("data")==null?null:(PelangganDTO) objectMapper.get("data"));
-        //jika object mapper bernilai TRUE atau success maka akan muncul modal edit_pelanggan.html
         if((Boolean) objectMapper.get("success"))
         {
+            //jika object mapper bernilai TRUE atau success maka akan muncul modal edit_pelanggan.html
             //membuat object pelangganDTOForSelect sebagai penampung dari paketlayananDTO data
+            //fungsi pelangganDTO adalah mendapatkan data dari variabel objectmapper jika null maka akan berisi null dan jika tidak maka akan terisi data dari pelanggan
             //kemudian add attribute pelangganDTO ke dalam edit_paketlayanan.html
             PelangganDTO pelangganDTOForSelect = (PelangganDTO) objectMapper.get("data");
             model.addAttribute("pelanggan", pelangganDTO);
             return "pelanggan/edit_pelanggan";
         }
-        //jika object mapper bernilai false maka akan redirect ke menu tampilan awal pelanggan
         else
         {
+        //jika tidak success atau FALSE maka akan redirect ke menu halaman awal pelanggan
             model.addAttribute("pelanggan", new PelangganDTO());
             return "redirect:/api/mgmnt/v1/pelanggan/default";
         }
@@ -293,6 +294,7 @@ public class PelangganController {
         model.addAttribute("valueFirst",valueFirst);
         model.addAttribute("sizeComponent",sizeComponent);
 
+        //masuk ke pelanggan.html
         return "/pelanggan/pelanggan";
     }
 
@@ -310,8 +312,8 @@ public class PelangganController {
                 return "redirect:/api/check/logout";
             }
         }
-        //mengisi object mapper dengan method dari pelanggan service dengan deletepelanggan dengan parameter id dan request
-        //set attribute model dan object mapper
+        //mengisi objectMapper dengan method dari pelanggan service dengan deletePelanggan(id,request)
+        //set attribute model dan objectMapper
         //lalu redirect ke pelanggan
         objectMapper = pelangganService.deletePelanggan(id,request);
         mappingAttribute.setAttribute(model,objectMapper);//untuk set session

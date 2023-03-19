@@ -59,39 +59,57 @@ public class PengeluaranController {
         mapSorting.put("biaya", "biaya");
     }
 
+    //API GET BERFUNGSI UNTUK MENAMPILKAN MODAL CREATE PENGELUARAN
     @GetMapping("/v1/pengeluaran/new")
     public String createPengeluaran(Model model, WebRequest request) {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
             if (request.getAttribute("USR_ID", 1) == null) {
                 return "redirect:/api/check/logout";
             }
         }
+        //memasukan attribute pengeluaran ke create_pengeluaran.html
         model.addAttribute("pengeluaran", new PengeluaranDTO());
         return "pengeluaran/create_pengeluaran";
     }
 
+    //API GET BERFUNGSI UNTUK MENAMPILKAN MODAL EDIT PENGELUARAN
     @GetMapping("/v1/pengeluaran/edit/{id}")
     public String editPengeluaran(Model model, WebRequest request, @PathVariable("id") Long id) {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
             if (request.getAttribute("USR_ID", 1) == null) {
                 return "redirect:/api/check/logout";
             }
         }
+
+        //objectMapper mengambil data pengeluaran dengan findById(id,request)
+        //pengeluaranDTO akan terisi jika data tidak null maka berisi PengeluaranDTO object
         objectMapper = pengeluaranService.findById(id, request);
         PengeluaranDTO pengeluaranDTO = (objectMapper.get("data") == null ? null : (PengeluaranDTO) objectMapper.get("data"));
+        //jika objectMapper bernilai TRUE atau success
         if ((Boolean) objectMapper.get("success")) {
+            //pengeluaranDTOForSelect berisi pengeluaranDTO object data
+            //add attribute pengeluaran=pengeluaranDTO ke edit_pengeluaran.html
             PengeluaranDTO pengeluaranDTOForSelect = (PengeluaranDTO) objectMapper.get("data");
             model.addAttribute("pengeluaran", pengeluaranDTO);
             return "pengeluaran/edit_pengeluaran";
 
         } else {
+            //jika objectMapper bernilai FALSE
+            //add attribute pengeluaran=pengeluaranDTO to pengeluaran.html
             model.addAttribute("pengeluaran", new PengeluaranDTO());
             return "redirect:/api/mgmnt/pengeluaran/default";
         }
     }
 
+    //API POST BERFUNGSI UNTUK MENAMBAH DATA PENGELUARAN
     @PostMapping("/v1/pengeluaran/new")
     public String newPengeluaran(@ModelAttribute(value = "pengeluaran")
                                  @Valid PengeluaranDTO pengeluaranDTO
@@ -99,7 +117,10 @@ public class PengeluaranController {
             , Model model
             , WebRequest request
     ) {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
             if (request.getAttribute("USR_ID", 1) == null) {
                 return "redirect:/api/check/logout";
@@ -107,34 +128,54 @@ public class PengeluaranController {
         }
 
         /* START VALIDATION */
+        //jika data binding error
         if (bindingResult.hasErrors()) {
+            //add attribute pengeluaran=pengeluaranDTO,status=error ke create_pengeluaran.html
             model.addAttribute("pengeluaran", pengeluaranDTO);
             model.addAttribute("status", "error");
-
+            //menampilkan modal create_pengeluaran.html
             return "pengeluaran/create_pengeluaran";
         }
+
+        //set isValid bernilai TRUE
         Boolean isValid = true;
 
+        //jika isValid bernilai FALSE
         if (!isValid) {
+            //add attribute pengeluaran=pengeluaranDTO to create_pengeluaran.html
             model.addAttribute("pengeluaran", pengeluaranDTO);
+            //menampilkan modal create_pengeluaran.html
             return "pengeluaran/create_pengeluaran";
         }
         /* END OF VALIDATION */
 
+        //isi object pengeluaran dengan modelMapper mapping data pengeluaranDTO beserta token
+        //objectMapper menampung dan menjalankan function savePengeluaran(pengeluaran,request)
         Pengeluaran pengeluaran = modelMapper.map(pengeluaranDTO, new TypeToken<Pengeluaran>() {
         }.getType());
         objectMapper = pengeluaranService.savePengeluaran(pengeluaran, request);
         if (objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+        //jika objectMapper message bernilai error
+            //redirect logout
             return "redirect:/api/check/logout";
         }
 
+        //jika objectMapper bernilai TRUE atau success
         if ((Boolean) objectMapper.get("success")) {
+            //set mappingAttribute model objectMapper
+            //addAttribute message to redirect pengeluaran.html
+            //object idDataSave berisi data idDataSave dari objectMapper, jika bernilai null maka value 1, jika tidak maka get idDataSave
+            //redirect pengeluaran.html
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("message", "DATA BERHASIL DISIMPAN");
             Long idDataSave = objectMapper.get("idDataSave") == null ? 1 : Long.parseLong(objectMapper.get("idDataSave").toString());
             return "redirect:/api/mgmnt/v1/pengeluaran/fbpsb/0/asc/idPengeluaran?columnFirst=idPengeluaran&valueFirst=" + idDataSave + "&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         } else {
+            //jika objectMapper bernilai FALSE
+            //set error message to attribute
+            //add attribute pengeluaran=new pengeluaranDTO, dan status=error from mappingAttribute
+            //menampilkan create_pengeluaran modal
             mappingAttribute.setErrorMessage(bindingResult, objectMapper.get("message").toString());
             model.addAttribute("pengeluaran", new PengeluaranDTO());
             model.addAttribute("status", "error");
@@ -142,6 +183,7 @@ public class PengeluaranController {
         }
     }
 
+    //API POST BERFUNGSI UNTUK MENGEDIT DATA PENGELUARAN
     @PostMapping("/v1/pengeluaran/edit/{id}")
     public String doRegis(@ModelAttribute("pengeluaran")
                           @Valid PengeluaranDTO pengeluaranDTO
@@ -150,56 +192,84 @@ public class PengeluaranController {
             , WebRequest request
             , @PathVariable("id") Long id
     ) {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
             if (request.getAttribute("USR_ID", 1) == null) {
                 return "redirect:/api/check/logout";
             }
         }
         /* START VALIDATION */
+        //jika data binding terjadi error
         if (bindingResult.hasErrors()) {
+            //add attribute to model pengeluaran=pengeluaranDTP
+            //menampilkan edit_pengeluaran modal
             model.addAttribute("pengeluaran", pengeluaranDTO);
             return "pengeluaran/edit_pengeluaran";
         }
+
+        //set isValid bernilai TRUE
         Boolean isValid = true;
 
+        //jika isValid bernilai FALSE
         if (!isValid) {
+            //add attribute to model pengeluaran=pengeluaranDTO
+            //menampilkan edit_pengeluaran.html
             model.addAttribute("pengeluaran", pengeluaranDTO);
             return "pengeluaran/edit_pengeluaran";
         }
         /* END OF VALIDATION */
 
+        //membuat object pengeluaran berisi modelMapper dengan mapping data pengeluarabDTO beserta token
+        //objectMapper menampung proses updatePengeluaran(id,pengeluaran,request)
         Pengeluaran pengeluaran = modelMapper.map(pengeluaranDTO, new TypeToken<Pengeluaran>() {
         }.getType());
         objectMapper = pengeluaranService.updatePengeluaran(id, pengeluaran, request);
         if (objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+            //jika object mapper message adalah error maka redirect logout
             return "redirect:/api/check/logout";
         }
-
+        //jika objectMapper bernilai TRUE atau success
         if ((Boolean) objectMapper.get("success")) {
+            //set attribute model,objectMapper to mapping attribute
+            //add attribute pengeluaran=pengeluaranDTO
+            //redirect ke pengeluaran.html
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("pengeluaran", new PengeluaranDTO());
             return "redirect:/api/mgmnt/v1/pengeluaran/fbpsb/0/asc/idPengeluaran?columnFirst=idPengeluaran&valueFirst=" + id + "&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         } else {
+            //jika objectMapper bernilai FALSE
+            //set error message to mappingAttribute
+            //add attribute pengeluaran=pengeluaranDTO
+            //menampilkan edit_pengeluaran.html modal
             mappingAttribute.setErrorMessage(bindingResult, objectMapper.get("message").toString());
             model.addAttribute("pengeluaran", new PengeluaranDTO());
             return "pengeluaran/edit_pengeluaran";
         }
     }
 
+    //API GET BERFUNGSI UNTUK MENAMPILKAN HALAMAN AWAL PENGELUARAN
     @GetMapping("/v1/pengeluaran/default")
-    public String getDefaultData(Model model, WebRequest request) {
+    public String getDefaultData(Model model, WebRequest request){
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
             if (request.getAttribute("USR_ID", 1) == null) {
                 return "redirect:/api/check/logout";
             }
         }
+        //object pageable menampung pagerequest dengan parameter page,size,sort=idPengeluaran
+        //objectMapper menampung proses findAllPengeluaran(pageable,request)
+        //set attribute model,objectMapper,request ke mappingAttribute
         Pageable pageable = PageRequest.of(0, 5, Sort.by("idPengeluaran"));
         objectMapper = pengeluaranService.findAllPengeluaran(pageable, request);
         mappingAttribute.setAttribute(model, objectMapper, request);
-
+        //add attribute to pengeluaran.html
         model.addAttribute("pengeluaran", new PengeluaranDTO());
         model.addAttribute("sortBy", "idPengeluaran");
         model.addAttribute("currentPage", 1);
@@ -210,6 +280,7 @@ public class PengeluaranController {
         return "/pengeluaran/pengeluaran";
     }
 
+    //API GET BERFUNGSI UNTUK MENSORTING PENGELUARAN
     @GetMapping("/v1/pengeluaran/fbpsb/{page}/{sort}/{sortby}")
     public String findByPengeluaran(
             Model model,
@@ -221,6 +292,11 @@ public class PengeluaranController {
             @RequestParam String sizeComponent,
             WebRequest request
     ) {
+        //menampung value dari request param ke dalam variabel
+        //object pageable menampung pagerequest dengan parameter dari variabel
+        //objectMapper menampung proses findByPage(pageable,request,columnFirst,valueFirst)
+        //setAttribute to mappingAttribute
+        //add attribute to pengeluaran.html
         sortzBy = mapSorting.get(sortzBy);
         sortzBy = sortzBy == null ? "idPengeluaran" : sortzBy;
         Pageable pageable = PageRequest.of(pagez == 0 ? pagez : pagez - 1, Integer.parseInt(sizeComponent.equals("") ? "5" : sizeComponent), sortz.equals("asc") ? Sort.by(sortzBy) : Sort.by(sortzBy).descending());
@@ -241,23 +317,34 @@ public class PengeluaranController {
             , WebRequest request
             , @PathVariable("id") byte id
     ) {
+        //memastikan bahwa session user masih ada jika tidak ada maka akan di redirect ke logout
         if (OtherConfig.getFlagSessionValidation().equals("y")) {
+            //memasukan model,objectmapper,request ke dalam mapping attribute
+            //mendapatkan attribute user id dari service jika null maka akan redirect ke api logout
             mappingAttribute.setAttribute(model, objectMapper, request);//untuk set session
             if (request.getAttribute("USR_ID", 1) == null) {
                 return "redirect:/api/check/logout";
             }
         }
+
+        //objectMapper menampung proses deletePengeluaran(id,request)
         objectMapper = pengeluaranService.deletePengeluaran(id,request);
         if (objectMapper.get("message").toString().equals(ConstantMessage.ERROR_FLOW_INVALID))//AUTO LOGOUT JIKA ADA PESAN INI
         {
+            //jika objectMapper message bernilai error maka redirect logout
             return "redirect:/api/check/logout";
         }
-
+        //jika objectMapper bernilai success TRUE
         if ((Boolean) objectMapper.get("success")) {
+            //setAttribute model,object to mappingAttribute
+            //redirect ke halaman pengeluaran.html
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("pengeluaran", new PengeluaranDTO());
             return "redirect:/api/mgmnt/v1/pengeluaran/fbpsb/0/asc/idPengeluaran?columnFirst=idPengeluaran&valueFirst=" + id + "&sizeComponent=5";//LANGSUNG DITAMPILKAN FOKUS KE HASIL EDIT USER TADI
         } else {
+            //jika objectMapper bernilai FALSE
+            //setAttribute mdoel,objectMapper to mappingAttribute
+            //return ke pengeluaran.html
             mappingAttribute.setAttribute(model, objectMapper);
             model.addAttribute("pengeluaran", new PengeluaranDTO());
             return "pengeluaran/pengeluaran";

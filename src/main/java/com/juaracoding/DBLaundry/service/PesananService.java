@@ -65,6 +65,13 @@ public class PesananService {
         mapColumnSearch.put("cara","CARA BAYAR");
     }
 
+    //METHOD GET PROFIT PER MONTH
+    public Integer getTotalProfit(){
+        Double total = pesananRepo.calculationCurrentMonthReport();
+        return total.intValue();
+    }
+
+    // METHOD SAVE PESANAN BERFUNGSI MENYIMPAN DATA PESANAN
     public Map<String, Object> savePesanan(Pesanan pesanan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_SAVE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -92,6 +99,7 @@ public class PesananService {
                 null, request);
     }
 
+    // METHOD UPDATE PESANAN BERFUNGSI UNTUK MENGUBAH DATA PESANAN
     public Map<String, Object> updatePesanan(Long idPesanan,Pesanan pesanan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_UPDATE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -136,6 +144,7 @@ public class PesananService {
                 null, request);
     }
 
+    // METHOD SAVE UPLOAD FILE PESANAN BERFUNGSI MENYIMPAN DATA PESANAN DARI FILE CSV
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> saveUploadFilePesanan(List<Pesanan> listPesanan,
                                                      MultipartFile multipartFile,
@@ -165,6 +174,7 @@ public class PesananService {
                         request);
     }
 
+    // METHOD FIND ALL PESANAN BERFUNGSI MENGAMBIL SEMUA FILE PESANAN
     public Map<String,Object> findAllPesanan(Pageable pageable, WebRequest request)
     {
         List<PesananDTO> listPesananDTO = null;
@@ -207,6 +217,7 @@ public class PesananService {
                         null);
     }
 
+    // METHOD FIND BY PAGE BERFUNGSI UNTUK MENGAMBIL DATA PESANAN BY PAGE
     public Map<String,Object> findByPage(Pageable pageable,WebRequest request,String columFirst,String valueFirst)
     {
         Page<Pesanan> pagePesanan = null;
@@ -275,6 +286,7 @@ public class PesananService {
                         request);
     }
 
+    // METHOD FIND BY ID BERFUNGSI UNTUK MENGAMBIL DATA PESANAN DENGAN ID
     public Map<String,Object> findById(Long id, WebRequest request)
     {
         Pesanan pesanan = pesananRepo.findById(id).orElseThrow (
@@ -320,6 +332,7 @@ public class PesananService {
         return listPesananDTO;
     }
 
+    // METHOD DELETE PESANAN BERFUNGSI UNTUK MENGHAPUS DATA PESANAN
     public Map<String, Object> deletePesanan(Long idPesanan, WebRequest request) {
         String strMessage = ConstantMessage.SUCCESS_DELETE;
         Object strUserIdz = request.getAttribute("USR_ID",1);
@@ -361,6 +374,7 @@ public class PesananService {
                 null, request);
     }
 
+    // METHOD GET DATA BY VALUE BERFUNGSI MENGAMBIL DATA DENGAN VALUE
     private Page<Pesanan> getDataByValue(Pageable pageable, String paramColumn, String paramValue)
     {
         if(paramValue.equals(""))
@@ -388,6 +402,22 @@ public class PesananService {
         return pesananRepo.findByIsDelete(pageable,(byte) 1);
     }
 
+    // METHOD GET DATA TO EXPORT BERFUNGSI UNTUK MEMBUAT LAPORAN PDF
+    private List<Pesanan> getDataToExport(String paramColumn, String paramValue)
+    {
+        if(paramValue.equals(""))
+        {
+            return pesananRepo.findByIsDelete((byte) 1);
+        }
+        if(paramColumn.equals("id"))
+        {
+            return pesananRepo.findByIsDeleteAndIdPesanan((byte) 1,Long.parseLong(paramValue));
+        } else if (paramColumn.equals("nama")) {
+            return pesananRepo.findByIsDeleteAndPelangganNamaLengkapContainsIgnoreCase((byte) 1,paramValue);
+        }
+
+        return pesananRepo.findByIsDelete((byte) 1);
+    }
     public List<PesananDTO> dataToExport(WebRequest request,String columnFirst,String valueFirst)
     {
         List<Pesanan> listPesanan = null;
@@ -409,6 +439,7 @@ public class PesananService {
                     return new ArrayList<PesananDTO>();
                 }
             }
+            listPesanan = getDataToExport(columnFirst,valueFirst);
             if(listPesanan.size()==0)
             {
                 return new ArrayList<PesananDTO>();
